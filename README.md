@@ -16,6 +16,12 @@ Let's break down that sentence ..
 
 2. Define a canvas element in your html page, and call one single javascript function to place the 3d pie chart on that canvas element. All data and configuration options are defined in one single javascript object.
 
+## screenshots
+
+![Screenshot-candy-pie](https://user-images.githubusercontent.com/11560767/184908958-1da16ce2-3e11-40a1-995b-c9620535cee9.png)
+
+![Screenshot-candy-pie2](https://user-images.githubusercontent.com/11560767/184909403-5629809d-d356-4082-b2b2-8a775b4ca131.png)
+
+## more
+
 [more info, examples and options](https://thierryvergult.github.io/CandyPie/)
-
-
