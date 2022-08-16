@@ -16,6 +16,23 @@ Let's break down that sentence ..
 
 2. Define a canvas element in your html page, and call one single javascript function to place the 3d pie chart on that canvas element. All data and configuration options are defined in one single javascript object.
 
+Supports two data sets, one that sets the height of the slices, and one (optional) set that sets the angle (width) of the slices.
+
+example
+```
+let pie3d_2 = {
+'htmlCanvasId': 'candy-pie-id01',
+'slices': [
+  { 'height': 100, 'color': 'indianred'},
+  { 'height': 100, 'color': 'steelblue'},
+  { 'height': 100, 'color': 'olive'}
+],
+'spaceBetweenSlices': true,
+'innerRadiusPct': 40,
+'backgroundColor': 'lightgrey'
+};
+```
+
 ## screenshots
 
 ![Screenshot-candy-pie](https://user-images.githubusercontent.com/11560767/184908958-1da16ce2-3e11-40a1-995b-c9620535cee9.png)
@@ -24,4 +41,4 @@ Let's break down that sentence ..
 
 ## more
 
-[more info, examples and options](https://thierryvergult.github.io/CandyPie/)
+[more info, examples and configuration options](https://thierryvergult.github.io/CandyPie/)
