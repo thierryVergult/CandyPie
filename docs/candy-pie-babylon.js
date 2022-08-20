@@ -166,7 +166,7 @@ function pieChart (pie3d) {
       const clickScale = 1 + ( pie3d.clickScalePct / 100);
   
       donut.actionManager.registerAction(
-          new BABYLON.InterpolateValueAction(
+        new BABYLON.InterpolateValueAction(
           BABYLON.ActionManager.OnPickTrigger, 
           donut, 
           "scaling", 
@@ -174,13 +174,26 @@ function pieChart (pie3d) {
           250, // duration
           undefined, // condition
           undefined, // stopOtherAnimations
-          function(){ // onInterpolationDone: defines a callback raised once the interpolation animation has been done
+          function() { // onInterpolationDone: defines a callback raised once the interpolation animation has been done
             //console.log('click: ', this.value);
             this.value._x = ( this.value._x > 1 ? 1 : clickScale);
             this.value._y = ( this.value._y > 1 ? 1 : clickScale);
             this.value._z = ( this.value._z > 1 ? 1 : clickScale);
           }
-      ));
+        )
+      );
+
+      if ( pie3d.secondsPerRotation > 0 ) {
+        pie3d.scene.registerAfterRender( function () {
+          let extraAnglePerFrame = 2*Math.PI/60 / pie3d.secondsPerRotation;
+          donut.addRotation( 0, extraAnglePerFrame, 0);
+
+          if (pie3d.spaceBetweenSlices) {
+            donut.position.x =   Math.cos( donut.rotation.y + halfArcSlice) * middleRadius;
+            donut.position.z = - Math.sin( donut.rotation.y + halfArcSlice) * middleRadius;
+          }
+        });
+      }
   
       return donut;
     }
@@ -266,6 +279,8 @@ var createPieChartScene = function (canvas, engine, pie3d) {
     
     let backgroundColor3 = new BABYLON.Color3.FromHexString( colorHex( pie3d.backgroundColor));
     scene.clearColor = backgroundColor3;
+
+    pie3d.scene = scene;
     
     // the very pie chart
     pieChart( pie3d);
@@ -292,6 +307,7 @@ function setPie3d( pie3d) {
   setDefault( 'backgroundColor', '#808080');
   setDefault( 'clickScalePct', 0);
   setDefault( 'labelColor', '');
+  setDefault( 'secondsPerRotation', 0);
 
   let slices = pie3d.slices.length;
   for (let i = 0; i < slices; i++) {
