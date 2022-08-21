@@ -1,0 +1,45 @@
+<!doctype html>
+  <html lang=en>
+  <head>
+    <meta charset=utf-8>
+    <title>candy pie playgrond</title>
+
+    <script src="https://cdn.babylonjs.com/babylon.js"></script>
+    <script src="./candy-pie-babylon.js"></script>
+
+  </head>
+  
+  <body>
+    <h3>candy pie playground</h3>
+
+    <h4>slices</h4>
+
+    <h4>configuration</h4>
+    <p>innerRadiusPct &nbsp; <input type="number" id="innerRadiusPct" name="innerRadiusPct" min="0" max="100" onchange="pie3d.innerRadiusPct = this.value;"></p>
+    <p>spaceBetweenSlices &nbsp; <input type="number" id="spaceBetweenSlices" name="spaceBetweenSlices" min="0" max="1" onchange="pie3d.spaceBetweenSlices = Boolean( Number(this.value));"></p>
+    <p>backgroundColor &nbsp; <input type="text" id="backgroundColor" name="backgroundColor" onchange="pie3d.backgroundColor = this.value;"></p>
+    <p>secondsPerRotation &nbsp; <input type="number" id="secondsPerRotation" name="secondsPerRotation" min="0" max="100" onchange="pie3d.secondsPerRotation = this.value;"></p>
+
+    <button onclick="candy_pie_babylon( pie3d);">Update Candy Pie</button>
+    <br><br>
+
+    <canvas id='canvas-id' class='candy-pie-babylon-canvas'></canvas>
+    
+    <script>
+      let pie3d = {
+        'htmlCanvasId': 'canvas-id',
+        'slices': [
+          { 'height': 100, 'color': 'indianred'},
+          { 'height': 100, 'color': 'steelblue'},
+          { 'height': 100, 'color': 'olive'}
+        ],
+        'spaceBetweenSlices': true,
+        'innerRadiusPct': 40,
+        'backgroundColor': 'lightgrey',
+        'secondsPerRotation': 3
+      };
+              
+      candy_pie_babylon( pie3d);
+    </script>
+  </body>
+</html>

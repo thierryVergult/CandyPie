@@ -96,7 +96,7 @@ function angleBetween3Points(p0,p1,p2) {
 function pieChart (pie3d) {
   
   let oneSlice = function( height, arcFraction, color, label, value) {
-      
+    
     // CSG: Constructive Solid Geometry : pie (= cylinder with arc) - full cylinder for inner part to carve out
       
     // face UV is used to have the text on front. All other faces just get the background color
@@ -126,7 +126,7 @@ function pieChart (pie3d) {
       diameter: diameter,
       faceUV: faceUV // contains now no text anymore
     });
-      
+    
     const cylCSG = BABYLON.CSG.FromMesh(cyl);
   
     // subtract inner cylinder from pie  
@@ -241,10 +241,8 @@ function pieChart (pie3d) {
         
     let p = slices[i],
         h = p.height / maxVal * pie3d.verticalFactor;
-      
-    p.arcPct = p.arcPct / 100;
   
-    let slice = oneSlice( h, p.arcPct, p.color, p.label, p.height);
+    let slice = oneSlice( h, p.arcPct / 100, p.color, p.label, p.height);
   
     // increment rotY for the next slice
     rotY = rotY + ( 2 * Math.PI * p.arcPct);
@@ -253,13 +251,13 @@ function pieChart (pie3d) {
   }
 }
   
-var createPieChartScene = function (canvas, engine, pie3d) {
+var createPieChartScene = function ( pie3d) {
 
-  var scene = new BABYLON.Scene(engine);
+  var scene = new BABYLON.Scene( pie3d.engine);
   
   // define an arcrotate camera
   const camera = new BABYLON.ArcRotateCamera("Camera", 0, 0, 0, new BABYLON.Vector3(0, 0, 0));
-  camera.attachControl(canvas, true);
+  camera.attachControl( pie3d.canvas, true);
     
   // set position & disable zooming
   const cameraRadius = Math.max( pie3d.diameter, 1) * Math.max( pie3d.verticalFactor, 1) * 3;
@@ -313,6 +311,7 @@ var createPieChartScene = function (canvas, engine, pie3d) {
   return scene;
 };
 
+
 function setPie3d( pie3d) {
 
   let setDefault = function ( property, defaultValue) {
@@ -346,21 +345,26 @@ function setPie3d( pie3d) {
   console.log( 'pie3d defaulted', pie3d);
 }
 
+
 function candy_pie_babylon ( pie3d) {
 
-  var canvas = document.getElementById( pie3d.htmlCanvasId);
+  pie3d.canvas = document.getElementById( pie3d.htmlCanvasId);
+
+  if (pie3d['engine'] != undefined) {
+    pie3d.engine.dispose();
+  }
   
-  var engine = new BABYLON.Engine( canvas, true);
+  pie3d.engine = new BABYLON.Engine( pie3d.canvas, true);
   
   setPie3d( pie3d);
 
-  var scene = createPieChartScene( canvas, engine, pie3d);
+  var scene = createPieChartScene( pie3d);
   
-  engine.runRenderLoop(function () {
+  pie3d.engine.runRenderLoop(function () {
     scene.render();
   });
       
   window.addEventListener("resize", function () {
-    engine.resize();
+    pie3d.engine.resize();
   });
 }
