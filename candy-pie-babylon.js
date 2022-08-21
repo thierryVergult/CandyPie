@@ -24,12 +24,16 @@
       labelColor
       secondsPerRotation
 
-    data for each slice in an array, slices, as part of the pie3d object,  fields beng height, arcPct & color:
+    data for each slice in an array, slices, as part of the pie3d object,  fields being 
+    - height
+    - arcPct
+    - color
+    - label
 
       'slices': [
-        { 'height': 100, 'arcPct': 50, 'color': 'red'},
-        { 'height': 125, 'arcPct': 25, 'color': 'blue'},
-        { 'height': 150, 'arcPct': 25, 'color': 'yellow'}
+        { 'height': 100, 'arcPct': 50, 'color': 'red',    'label': 'label1'},
+        { 'height': 125, 'arcPct': 25, 'color': 'blue',   'label': 'label1'},
+        { 'height': 150, 'arcPct': 25, 'color': 'yellow', 'label': 'label1'}
       ]
     
 */
