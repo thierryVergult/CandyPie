@@ -2,13 +2,39 @@
   <html lang=en>
   <head>
     <meta charset=utf-8>
+    <meta name="viewport" content="width=device-width">
+    <meta name="mobile-web-app-capable" content="yes">
+
     <title>candy pie playgrond</title>
 
     <style>
+      body {
+        padding-left: 10px;
+        color: steelblue;
+        max-width: 600px;
+        border: 1px solid lightgrey;
+      }
+
       .configOption {
         display: inline-block;
-        width: 150px;
+        width: 35%;
         margin: 8px;
+      }
+
+      .candy-pie-babylon-canvas {
+        width: 80%;
+        margin-left: 10%;
+      }
+
+      .btn {
+        margin-left: 10px;
+        background-color: lightblue;
+        padding: 20px;
+        margin-bottom: 15px;
+        border: none;
+        box-shadow: 5px 7px steelblue;
+        font-weight: bold;
+        font-size: 16px;
       }
     </style>
 
@@ -18,11 +44,12 @@
   </head>
   
   <body>
-    <h3>candy pie playground</h3>
 
-    <h4>data for the slices</h4>
+    <h2>candy pie playground</h2>
 
-    <h4>configuration</h4>
+    <h3>data for the slices</h3>
+
+    <h3>configuration</h3>
 
     <p class="configOption">innerRadiusPct</p>
       <input type="number" name="innerRadiusPct"  min="0" max="99" onchange="pie3d[this.name] = this.value;">
@@ -61,9 +88,8 @@
         <li>0 degrees: you see a rectangle, lookin at the front surface of the slices
         <li>90 degrees: the pie becomes a circle
         </ul>
-      <br>
 
-    <h5>labels</h5>
+    <h4>labels</h4>
     
     <ol>
       <li>showLabel
@@ -73,13 +99,9 @@
       <li>labelColor
     </ol>
 
-
-    <button onclick="candy_pie_babylon( pie3d);">Update Candy Pie</button>
-    <br><br>
+    <button onclick="candy_pie_babylon( pie3d);" class="btn">Update Candy Pie</button>
 
     <canvas id='canvas-id' class='candy-pie-babylon-canvas'></canvas>
-
-    <p>to do: bring in the values of the starting pie3d object</p>
     
     <script>
       let pie3d = {
