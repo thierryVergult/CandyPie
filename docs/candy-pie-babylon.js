@@ -176,6 +176,8 @@ function pieChart (pie3d) {
     const halfArcSlice = 2 * Math.PI * arcFraction / 2;
   
     donut.rotation.y = rotY;
+
+    let middleRadius = 0;
       
     // add some space in between the slices
     if (pie3d.spaceBetweenSlices) {
