@@ -247,7 +247,7 @@ function pieChart (pie3d) {
     let slice = oneSlice( h, p.arcPct / 100, p.color, p.label, p.height);
   
     // increment rotY for the next slice
-    rotY = rotY + ( 2 * Math.PI * p.arcPct);
+    rotY = rotY + ( 2 * Math.PI * p.arcPct / 100);
     sliceNr = sliceNr + 1;
         
   }
