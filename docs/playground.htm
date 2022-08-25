@@ -17,20 +17,22 @@
 
       .configOption {
         display: inline-block;
-        width: 35%;
+        width: 60%;
         margin: 8px;
       }
 
       .candy-pie-babylon-canvas {
         width: 80%;
         margin-left: 10%;
+        margin-bottom: 30px;
       }
 
       .btn {
+        margin-top: 10px;
         margin-left: 10px;
         background-color: lightblue;
         padding: 20px;
-        margin-bottom: 15px;
+        margin-bottom: 25px;
         border: none;
         box-shadow: 5px 7px steelblue;
         font-weight: bold;
@@ -67,10 +69,12 @@
 
     <p class="configOption">secondsPerRotation</p>
       <input type="number" name="secondsPerRotation" min="0" max="100" onchange="pie3d[this.name] = this.value;">
+      <span>s</span>
       <br>
     
     <p class="configOption">clickScalePct</p>
       <input type="number" name="clickScalePct" min="0" max="100" onchange="pie3d[this.name] = this.value;">
+      <span>%</span>
       <br>
     
     <p class="configOption">allowVerticalRotation</p>
@@ -84,10 +88,11 @@
 
       <p class="configOption">cameraDegreesY</p>
       <input type="number" name="cameraDegreesY"  min="0" max="90" onchange="pie3d[this.name] = this.value;">
+      <span>&deg;</span>
       <ul>
-        <li>0 degrees: you see a rectangle, lookin at the front surface of the slices
-        <li>90 degrees: the pie becomes a circle
-        </ul>
+        <li>0 &deg; : you see a rectangle, looking at the front surface of the slices
+        <li>90 &deg; : you see the pie chart from above, the pie becomes a circle
+      </ul>
 
     <h4>labels</h4>
     
