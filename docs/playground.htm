@@ -22,21 +22,25 @@
       }
 
       .candy-pie-babylon-canvas {
+        touch-action: none;
+        outline: none;
         width: 80%;
         margin-left: 10%;
         margin-bottom: 30px;
       }
 
       .btn {
-        margin-top: 10px;
-        margin-left: 10px;
+        width: 80%;
+        margin-left: 10%;
         background-color: lightblue;
-        padding: 20px;
+        padding-top: 20px;
+        padding-bottom: 20px;
         margin-bottom: 25px;
         border: none;
-        box-shadow: 5px 7px steelblue;
+        box-shadow: 3px 7px steelblue;
         font-weight: bold;
-        font-size: 16px;
+        font-size: 24px;
+        color: steelblue;
       }
 
       #slices-id {
@@ -60,9 +64,9 @@
 
     <div id="slices-id"></div>
 
-    <button onclick="candy_pie_babylon( pie3d);" class="btn">Update Candy Pie</button>
-
     <canvas id='canvas-id' class='candy-pie-babylon-canvas'></canvas>
+
+    <button onclick="candy_pie_babylon( pie3d);" class="btn">Update Candy Pie</button>
 
     <h3>configuration</h3>
 
@@ -94,10 +98,6 @@
       <label>false</label><input type="radio" name="allowVerticalRotation" value="0" onchange="pie3d[this.name] = Boolean( Number(this.value));">
       <label>true </label><input type="radio" name="allowVerticalRotation" value="1" onchange="pie3d[this.name] = Boolean( Number(this.value));">
       <br>
-    
-    <p class="configOption">verticalFactor</p>
-      <input type="number" name="verticalFactor"  min="1" max="10" onchange="pie3d[this.name] = this.value;">
-      <br>
 
       <p class="configOption">cameraDegreesY</p>
       <input type="number" name="cameraDegreesY"  min="0" max="90" onchange="pie3d[this.name] = this.value;">
@@ -106,8 +106,12 @@
         <li>0 &deg; : you see a rectangle, looking at the front surface of the slices
         <li>90 &deg; : you see the pie chart from above, the pie becomes a circle
       </ul>
+    
+      <p class="configOption">verticalFactor</p>
+      <input type="number" name="verticalFactor"  min="1" max="10" onchange="pie3d[this.name] = this.value;">
+      <br>
 
-    <h4>labels</h4>
+    <h3>labels</h3>
     
     <ol>
       <li>showLabel
@@ -149,13 +153,15 @@
         data: pie3d.slices,
         layout: "fitColumns",
         columns:[
-          { title: "height", field: "height", headerSort: false, resizable: false, hozAlign: "right"},
-          { title: "color",  field: "color" , headerSort: false, resizable: false, formatter: "color"},
+          { title: "height", field: "height", headerSort: false, resizable: false, hozAlign: "right", editor:true},
+          { title: "color",  field: "color" , headerSort: false, resizable: false, formatter: "color", editor:true},
           { title: "arcPct", field: "arcPct", headerSort: false, resizable: false, formatter: "progress", formatterParams:{ 
               color: [ "wheat"], 
               legend: function(value) { return parseInt( value) + "%"}
-            }},
-          { title: "label",  field: "label", headerSort: false, resizable: false}
+            }
+            , editor:true
+          },
+          { title: "label",  field: "label", headerSort: false, resizable: false, editor:true}
         ]
       });
 
