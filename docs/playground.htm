@@ -21,6 +21,10 @@
         margin: 8px;
       }
 
+      input[type="number"] {
+        width: 15%;
+      }
+
       .candy-pie-babylon-canvas {
         touch-action: none;
         outline: none;
@@ -73,7 +77,7 @@
     
     <button onclick="table.addRow( {}, false);" class="btn-plus">Add row</button>
 
-    <p style="margin-left: 10%;">Set <i>height</i> or <i>ArcPct</i> to zero to remove a slice</p>
+    <p style="margin-left: 10%;">Set <i>height</i> or <i>ArcPct</i> to zero to remove a slice from the Candy Pie</p>
 
     <h3>candy pie</h3>
     <canvas id='canvas-id' class='candy-pie-babylon-canvas'></canvas>
