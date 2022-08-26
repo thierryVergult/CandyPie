@@ -119,16 +119,17 @@
     
     <script>
       let pie3d = {
-        'htmlCanvasId': 'canvas-id',
-        'slices': [
+        htmlCanvasId: 'canvas-id',
+        slices: [
           { height: 100, color: 'indianred'},
           { height: 100, color: 'steelblue'},
           { height: 100, color: 'olive'}
         ],
-        'spaceBetweenSlices': false,
-        'innerRadiusPct': 40,
-        'backgroundColor': '#d3d3d3',
-        'secondsPerRotation': 3
+        spaceBetweenSlices: false,
+        innerRadiusPct: 40,
+        backgroundColor: '#d3d3d3',
+        secondsPerRotation: 3,
+        showLabel: true
       };
               
       candy_pie_babylon( pie3d);
@@ -148,9 +149,9 @@
         data: pie3d.slices,
         layout: "fitColumns",
         columns:[
-          { title:"height", field:"height", width:100, hozAlign:"right"},
-          { title:"color",  field:"color" , width:100, formatter:"color"},
-          { title:"arcPct", field:"arcPct", width:100, formatter:"progress", formatterParams:{ 
+          { title:"height", field:"height", width: '20%', hozAlign:"right"},
+          { title:"color",  field:"color" , width: '15%', formatter:"color"},
+          { title:"arcPct", field:"arcPct", width: '20%', formatter:"progress", formatterParams:{ 
               color:[ "wheat"], 
               legend: function(value){return parseInt(value) + "%"}}
           },
