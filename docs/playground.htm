@@ -60,6 +60,10 @@
 
     <div id="slices-id"></div>
 
+    <button onclick="candy_pie_babylon( pie3d);" class="btn">Update Candy Pie</button>
+
+    <canvas id='canvas-id' class='candy-pie-babylon-canvas'></canvas>
+
     <h3>configuration</h3>
 
     <p class="configOption">innerRadiusPct</p>
@@ -112,10 +116,6 @@
       <li>labelExtraTopMargin
       <li>labelColor
     </ol>
-
-    <button onclick="candy_pie_babylon( pie3d);" class="btn">Update Candy Pie</button>
-
-    <canvas id='canvas-id' class='candy-pie-babylon-canvas'></canvas>
     
     <script>
       let pie3d = {
@@ -149,14 +149,14 @@
         data: pie3d.slices,
         layout: "fitColumns",
         columns:[
-          { title:"height", field:"height", width: '20%', hozAlign:"right"},
-          { title:"color",  field:"color" , width: '15%', formatter:"color"},
-          { title:"arcPct", field:"arcPct", width: '20%', formatter:"progress", formatterParams:{ 
-              color:[ "wheat"], 
-              legend: function(value){return parseInt(value) + "%"}}
-          },
-          { title:"label",  field:"label" }
-        ],
+          { title: "height", field: "height", headerSort: false, resizable: false, hozAlign: "right"},
+          { title: "color",  field: "color" , headerSort: false, resizable: false, formatter: "color"},
+          { title: "arcPct", field: "arcPct", headerSort: false, resizable: false, formatter: "progress", formatterParams:{ 
+              color: [ "wheat"], 
+              legend: function(value) { return parseInt( value) + "%"}
+            }},
+          { title: "label",  field: "label", headerSort: false, resizable: false}
+        ]
       });
 
     </script>
