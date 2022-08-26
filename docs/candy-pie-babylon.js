@@ -337,7 +337,7 @@ function setPie3d( pie3d) {
 
   let slices = pie3d.slices.length;
   for (let i = 0; i < slices; i++) {
-    if ( pie3d.slices[i].arcPct == undefined) pie3d.slices[i].arcPct = 1 / slices * 100;
+    if ( pie3d.slices[i].arcPct == undefined) pie3d.slices[i].arcPct = (1 / slices * 100).toFixed(2);
     if ( pie3d.slices[i].label == undefined) pie3d.slices[i].label = ' ';
   }
   

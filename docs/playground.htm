@@ -153,15 +153,10 @@
         data: pie3d.slices,
         layout: "fitColumns",
         columns:[
-          { title: "height", field: "height", headerSort: false, resizable: false, hozAlign: "right", editor:true},
-          { title: "color",  field: "color" , headerSort: false, resizable: false, formatter: "color", editor:true},
-          { title: "arcPct", field: "arcPct", headerSort: false, resizable: false, formatter: "progress", formatterParams:{ 
-              color: [ "wheat"], 
-              legend: function(value) { return parseInt( value) + "%"}
-            }
-            , editor:true
-          },
-          { title: "label",  field: "label", headerSort: false, resizable: false, editor:true}
+          { title: "height", field: "height", headerSort: false, resizable: false, editor: true, hozAlign: "right"},
+          { title: "color",  field: "color" , headerSort: false, resizable: false, editor: true, formatter: "color"},
+          { title: "arcPct", field: "arcPct", headerSort: false, resizable: false, editor: true, hozAlign: "right"},
+          { title: "label",  field: "label",  headerSort: false, resizable: false, editor: true}
         ]
       });
 
