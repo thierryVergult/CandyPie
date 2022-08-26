@@ -96,6 +96,10 @@ function angleBetween3Points(p0,p1,p2) {
 function pieChart (pie3d) {
   
   let oneSlice = function( height, arcFraction, color, label, value) {
+
+    if (height <= 0 || arcFraction <= 0) {
+      return;
+    }
     
     // CSG: Constructive Solid Geometry : pie (= cylinder with arc) - full cylinder for inner part to carve out
       

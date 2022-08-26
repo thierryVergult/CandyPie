@@ -43,6 +43,13 @@
         color: steelblue;
       }
 
+      .btn-plus {
+        margin-left: 10%;
+        padding-top: 10px;
+        padding-bottom: 10px;
+        margin-bottom: 10px;
+      }
+
       #slices-id {
         margin: 20px;
       }
@@ -63,10 +70,15 @@
     <h3>data for the slices</h3>
 
     <div id="slices-id"></div>
+    
+    <button onclick="table.addRow( {}, false);" class="btn-plus">Add row</button>
 
+    <p style="margin-left: 10%;">Set <i>height</i> or <i>ArcPct</i> to zero to remove a slice</p>
+
+    <h3>candy pie</h3>
     <canvas id='canvas-id' class='candy-pie-babylon-canvas'></canvas>
 
-    <button onclick="candy_pie_babylon( pie3d);" class="btn">Update Candy Pie</button>
+    <button onclick="pie3d.slices = table.getData(); candy_pie_babylon( pie3d);" class="btn">Update Candy Pie</button>
 
     <h3>configuration</h3>
 

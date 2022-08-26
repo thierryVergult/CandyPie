@@ -97,6 +97,10 @@ function pieChart (pie3d) {
   
   let oneSlice = function( height, arcFraction, color, label, value) {
     
+    if (height <= 0 || arcFraction <= 0) {
+      return;
+    }
+
     // CSG: Constructive Solid Geometry : pie (= cylinder with arc) - full cylinder for inner part to carve out
       
     // face UV is used to have the text on front. All other faces just get the background color
