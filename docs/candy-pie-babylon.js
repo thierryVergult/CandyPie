@@ -160,7 +160,7 @@ function pieChart (pie3d) {
     }
 
     const txt_X_distance_from_left_hand_edge = 40;
-    const txt_Y_distance_from_the_top = ( 60 * ( 1 + ( pie3d.labelFontFactor / 3))) + pie3d.labelExtraTopMargin;
+    const txt_Y_distance_from_the_top = ( 60 * ( 1 + ( pie3d.labelFontFactor / 3))) + Number( pie3d.labelExtraTopMargin);
     console.log( 'txt_Y_distance_from_the_top', txt_Y_distance_from_the_top);
 
     texture.drawText( textOnSlice, txt_X_distance_from_left_hand_edge, txt_Y_distance_from_the_top, font, textColor, color, textInvertY);

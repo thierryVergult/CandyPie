@@ -155,11 +155,14 @@
     <p class="configOption">labelFontFactor</p>
       <input type="number" name="labelFontFactor"  min="1" max="5" onchange="pie3d[this.name] = this.value;">  
       <br>
+
+    <p class="configOption">labelExtraTopMargin</p>
+      <input type="number" name="labelExtraTopMargin"  min="1" max="50" onchange="pie3d[this.name] = this.value;">  
+      <br>
     
-    <ol>
-      <li>labelExtraTopMargin
-      <li>labelColor
-    </ol>
+    <p class="configOption">labelColor</p>
+      <input type="color" name="labelColor" onchange="pie3d[this.name] = this.value;">
+      <br>
     
     <script>
       let pie3d = {
@@ -192,6 +195,8 @@
       document.getElementsByName("showLabel")[Number(pie3d.showLabel)].checked = true;
       document.getElementsByName("showHeight")[Number(pie3d.showHeight)].checked = true;
       document.getElementsByName("labelFontFactor")[0].value = pie3d.labelFontFactor;
+      document.getElementsByName("labelExtraTopMargin")[0].value = pie3d.labelExtraTopMargin;
+      document.getElementsByName("labelColor")[0].value = pie3d.labelColor;
 
       var table = new Tabulator("#slices-id", {
         data: pie3d.slices,
