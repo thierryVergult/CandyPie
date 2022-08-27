@@ -139,6 +139,9 @@
     <p class="configOption">verticalFactor</p>
       <input type="number" name="verticalFactor"  min="1" max="10" onchange="pie3d[this.name] = this.value;">
       <br>
+      <br><br>
+
+    <button onclick="pie3d.slices = table.getData(); candy_pie_babylon( pie3d);" class="btn">Update Candy Pie</button>
 
     <h3>labels</h3>
 
@@ -155,13 +158,15 @@
     <p class="configOption">labelFontFactor</p>
       <input type="number" name="labelFontFactor"  min="1" max="5" onchange="pie3d[this.name] = this.value;">  
       <br>
-
-    <p class="configOption">labelExtraTopMargin</p>
-      <input type="number" name="labelExtraTopMargin"  min="1" max="50" onchange="pie3d[this.name] = this.value;">  
-      <br>
     
     <p class="configOption">labelColor</p>
       <input type="color" name="labelColor" onchange="pie3d[this.name] = this.value;">
+      <br>
+      <p style="margin-left: 10%; margin-right: 10%;">By default, black or white is chosen per slice, for the best contrast against the color of the slice. A yellow slice will have a black label, a blue slice a white label.</p>
+      <p style="margin-left: 10%; margin-right: 10%;">Setting the label color here is for all slices.</p>
+
+    <p class="configOption">labelExtraTopMargin</p>
+      <input type="number" name="labelExtraTopMargin"  min="1" max="50" onchange="pie3d[this.name] = this.value;">  
       <br>
     
     <script>
