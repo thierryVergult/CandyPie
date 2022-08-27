@@ -12,6 +12,7 @@
         padding-left: 10px;
         color: steelblue;
         max-width: 600px;
+        margin: auto;
         border: 1px solid lightgrey;
       }
 
@@ -71,13 +72,25 @@
 
     <h2>candy pie playground</h2>
 
+    <h3>candy pie</h3>
+
+      <h4 style="margin: 5%;">a configurable, interactive 3d pie chart in your browser</h4>
+
+      <ul style="margin: 5%;">
+        <li><a href="https://github.com/thierryVergult/CandyPie" target="_blank">open source repository on github</a></li>
+        <li><a href="https://thierryvergult.github.io/CandyPie/" target="_blank">for more examples &amp; details</a></li>
+      </ul>
+
     <h3>data for the slices</h3>
 
-    <div id="slices-id"></div>
-    
-    <button onclick="table.addRow( {}, false);" class="btn-plus">Add row</button>
+      <p style="margin: 5%;">You can modify all data in the table below. Each row corresponds to a slice of the candy pie.</p>
 
-    <p style="margin-left: 10%;">Set <i>height</i> or <i>ArcPct</i> to zero to remove a slice from the Candy Pie</p>
+      <div id="slices-id"></div>
+    
+      <button onclick="table.addRow( {}, false);" class="btn-plus">Add row</button>
+
+      <p style="margin-left: 10%; margin-right: 10%;">Set <i>height</i> or <i>ArcPct</i> to zero to remove a slice from the candy pie</p>
+      <p style="margin-left: 10%; margin-right: 10%;">You can type the name of a color, like <i>yellow</i>, in the <i>color</i> column, or type there the hexadecimal value, like <i>#000000</i> (for black).</p>
 
     <h3>candy pie</h3>
     <canvas id='canvas-id' class='candy-pie-babylon-canvas'></canvas>
