@@ -77,8 +77,10 @@
       <h4 style="margin: 5%;">a configurable, interactive 3d pie chart in your browser</h4>
 
       <ul style="margin: 5%;">
-        <li><a href="https://github.com/thierryVergult/CandyPie" target="_blank">open source repository on github</a></li>
+        <li>open source repository on <a href="https://github.com/thierryVergult/CandyPie" target="_blank">github</a></li>
         <li><a href="https://thierryvergult.github.io/CandyPie/" target="_blank">for more examples &amp; details</a></li>
+        <br>
+        <li><a href="http://tabulator.info/" target="_blank">tabulator</a> for the interactive table below</li>
       </ul>
 
     <h3>data for the slices</h3>
@@ -207,10 +209,10 @@
         data: pie3d.slices,
         layout: "fitColumns",
         columns:[
-          { title: "height", field: "height", headerSort: false, resizable: false, editor: true, hozAlign: "right"},
-          { title: "color",  field: "color" , headerSort: false, resizable: false, editor: true, formatter: "color"},
-          { title: "arcPct", field: "arcPct", headerSort: false, resizable: false, editor: true, hozAlign: "right"},
-          { title: "label",  field: "label",  headerSort: false, resizable: false, editor: true}
+          { title: "height", field: "height", headerSort: false, resizable: false, editor: "number", headerHozAlign: "right", hozAlign: "right"},
+          { title: "color",  field: "color" , headerSort: false, resizable: false, editor: true, headerHozAlign: "left", formatter: "color"},
+          { title: "arcPct", field: "arcPct", headerSort: false, resizable: false, editor: "number", headerHozAlign: "right", hozAlign: "right", editorParams: { min: 0, max: 100 }},
+          { title: "label",  field: "label",  headerSort: false, resizable: false, editor: true, headerHozAlign: "left"}
         ]
       });
 
