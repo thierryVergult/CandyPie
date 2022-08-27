@@ -128,7 +128,7 @@
       <label>true </label><input type="radio" name="allowVerticalRotation" value="1" onchange="pie3d[this.name] = Boolean( Number(this.value));">
       <br>
 
-      <p class="configOption">cameraDegreesY</p>
+    <p class="configOption">cameraDegreesY</p>
       <input type="number" name="cameraDegreesY"  min="0" max="90" onchange="pie3d[this.name] = this.value;">
       <span>&deg;</span>
       <ul>
@@ -136,16 +136,27 @@
         <li>90 &deg; : you see the pie chart from above, the pie becomes a circle
       </ul>
     
-      <p class="configOption">verticalFactor</p>
+    <p class="configOption">verticalFactor</p>
       <input type="number" name="verticalFactor"  min="1" max="10" onchange="pie3d[this.name] = this.value;">
       <br>
 
     <h3>labels</h3>
+
+    <p class="configOption">showLabel</p>
+      <label>false</label><input type="radio" name="showLabel" value="0" onchange="pie3d[this.name] = Boolean( Number(this.value));">
+      <label>true </label><input type="radio" name="showLabel" value="1" onchange="pie3d[this.name] = Boolean( Number(this.value));">
+      <br>
+
+    <p class="configOption">showHeight</p>
+      <label>false</label><input type="radio" name="showHeight" value="0" onchange="pie3d[this.name] = Boolean( Number(this.value));">
+      <label>true </label><input type="radio" name="showHeight" value="1" onchange="pie3d[this.name] = Boolean( Number(this.value));">
+      <br>
+
+    <p class="configOption">labelFontFactor</p>
+      <input type="number" name="labelFontFactor"  min="1" max="5" onchange="pie3d[this.name] = this.value;">  
+      <br>
     
     <ol>
-      <li>showLabel
-      <li>showHeight
-      <li>labelFontFactor
       <li>labelExtraTopMargin
       <li>labelColor
     </ol>
@@ -177,6 +188,10 @@
       document.getElementsByName("allowVerticalRotation")[Number(pie3d.allowVerticalRotation)].checked = true;
       document.getElementsByName("verticalFactor")[0].value = pie3d.verticalFactor;
       document.getElementsByName("cameraDegreesY")[0].value = pie3d.cameraDegreesY;
+
+      document.getElementsByName("showLabel")[Number(pie3d.showLabel)].checked = true;
+      document.getElementsByName("showHeight")[Number(pie3d.showHeight)].checked = true;
+      document.getElementsByName("labelFontFactor")[0].value = pie3d.labelFontFactor;
 
       var table = new Tabulator("#slices-id", {
         data: pie3d.slices,

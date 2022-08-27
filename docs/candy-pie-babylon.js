@@ -156,7 +156,7 @@ function pieChart (pie3d) {
     }
 
     if ( pie3d.showHeight) {
-      textOnSlice = textOnSlice + ( pie3d.showLabel ? ': ': '') + value
+      textOnSlice = textOnSlice + ( pie3d.showLabel && textOnSlice ? ': ': '') + value
     }
 
     const txt_X_distance_from_left_hand_edge = 40;
@@ -342,7 +342,7 @@ function setPie3d( pie3d) {
   let slices = pie3d.slices.length;
   for (let i = 0; i < slices; i++) {
     if ( pie3d.slices[i].arcPct == undefined) pie3d.slices[i].arcPct = (1 / slices * 100).toFixed(2);
-    if ( pie3d.slices[i].label == undefined) pie3d.slices[i].label = ' ';
+    if ( pie3d.slices[i].label == undefined) pie3d.slices[i].label = '';
   }
   
   // internal values
