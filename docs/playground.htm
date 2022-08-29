@@ -223,6 +223,7 @@
         var editor = document.createElement("input");
         editor.dataset.coloris = '';
         editor.value = cell.getValue();
+        editor.readOnly = true;
 
         onRendered(function(){
           editor.click();
