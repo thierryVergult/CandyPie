@@ -10,6 +10,10 @@ Let's break down that sentence ..
 - 3d: standing on the shoulders of babylon.js
 - browser: works in a modern browser, desktop & mobile
 
+## playground
+
+Try it out, play with the options, in the [playground](https://thierryvergult.github.io/CandyPie/playground.htm).
+
 ## usage
 
 1. Load first the babylon.js code into your webpage, and add then the candy-pie javascript.
