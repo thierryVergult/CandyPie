@@ -66,6 +66,9 @@
     <link href="https://unpkg.com/tabulator-tables/dist/css/tabulator.min.css" rel="stylesheet">
     <script type="text/javascript" src="https://unpkg.com/tabulator-tables/dist/js/tabulator.min.js"></script>
 
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/mdbassit/Coloris@latest/dist/coloris.min.css"/>
+    <script src="https://cdn.jsdelivr.net/gh/mdbassit/Coloris@latest/dist/coloris.min.js"></script>
+
   </head>
   
   <body>
@@ -86,7 +89,7 @@
       <p style="margin: 5%;">You can modify all data in the table below. Each row corresponds to a slice of the candy pie.</p>
 
       <div id="slices-id"></div>
-    
+      
       <button onclick="table.addRow( {}, false);" class="btn-plus">Add row</button>
 
       <div  style="margin-left: 10%; margin-right: 10%;">
@@ -206,46 +209,36 @@
       document.getElementsByName("labelExtraTopMargin")[0].value = pie3d.labelExtraTopMargin;
       document.getElementsByName("labelColor")[0].value = pie3d.labelColor;
 
-      var colorEditor = function(cell, onRendered, success, cancel, editorParams) {
+      var colorEditor = function( cell, onRendered, success, cancel, editorParams) {
+
         //cell - the cell component for the editable cell
         //onRendered - function to call when the editor has been rendered
         //success - function to call to pass thesuccessfully updated value to Tabulator
         //cancel - function to call to abort the edit and return to a normal cell
         //editorParams - params object passed into the editorParams column definition property
 
-        console.log('color edit, in cell with value ' + cell.getValue());
+        console.log('coloris edit, in cell with value', cell.getValue());
 
         //create and style editor
         var editor = document.createElement("input");
+        editor.dataset.coloris = '';
+        editor.value = cell.getValue();
 
-        editor.setAttribute("type", "color");
-
-        //create and style input
-        //editor.style.margin = "1px";
-        //editor.style.width = "100%";
-        editor.style.boxSizing = "border-box";
-
-        //Set value of editor to the current value of the cell
-        //editor.value = luxon.DateTime.fromFormat(cell.getValue(), "dd/MM/yyyy").toFormat("yyyy-MM-dd")
-
-        //set focus on the select box when the editor is selected (timeout allows for editor to be added to DOM)
         onRendered(function(){
-            //editor.focus();
-            editor.style.width = "50%";
+          editor.click();
         });
 
         //when the value has been set, trigger the cell to update
         function successFunc(){
           console.log('color edit, success with value ' + editor.value);
           success( editor.value);
-          //success('green');
         }
 
         editor.addEventListener("change", successFunc);
         editor.addEventListener("blur", successFunc);
 
-        //return the editor element
         return editor;
+        
       };
 
       var table = new Tabulator("#slices-id", {
