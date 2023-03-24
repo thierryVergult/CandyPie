@@ -23,6 +23,7 @@
       clickScalePct
       labelColor
       secondsPerRotation
+      addLegend
 
     data for each slice in an array, slices, as part of the pie3d object,  fields being 
     - height
@@ -338,6 +339,7 @@ function setPie3d( pie3d) {
   setDefault( 'clickScalePct', 0);
   setDefault( 'labelColor', '');
   setDefault( 'secondsPerRotation', 0);
+  setDefault( 'addLegend', false);
 
   let slices = pie3d.slices.length;
   for (let i = 0; i < slices; i++) {
@@ -350,6 +352,100 @@ function setPie3d( pie3d) {
   pie3d.cameraFovFactor = 2.2; // add this to the calculated FOV so there are some margins.
   
   console.log( 'pie3d defaulted', pie3d);
+}
+
+
+function add_legend( pie3d) {
+  const legendDiv = document.createElement("div");
+  pie3d.legendDiv = legendDiv;
+  
+  if (pie3d.addLegend) {
+
+    // position the legend like the canvas.
+    // marginLeft not yet adjusted when the engine resizes
+    // other solution could be to set the canvas position as relative, and this legend div as absolute against the canvas. (offsetting the height)
+    legendDiv.style.width = pie3d.canvas.width + 'px';
+    legendDiv.style.marginLeft = pie3d.canvas.style.marginLeft;
+
+    legendDiv.style.marginTop = '6px';
+    
+    legendDiv.style.display = 'flex';
+    legendDiv.style.flexFlow = 'row wrap';
+    legendDiv.style.justifyContent = 'space-around';
+    
+    // in case one want custom css, you can do via this class
+    legendDiv.classList.add('candy-pie-legend');
+    
+    // add legenddiv after canvas, same level
+    let canvasElement = pie3d.canvas;
+    canvasElement.parentNode.insertBefore( legendDiv, canvasElement.nextSibling);
+
+    let pixelSize = '16px';
+
+    for (let i= 0; i < pie3d.slices.length; i++) {
+
+      // label item
+      let legendItem = document.createElement("div");
+      
+      legendItem.style.display = 'flex'; // set to flex to have both child divs on one row
+      // force all items to have the same width.
+      
+      legendItem.style.flexGrow = 1;
+      legendItem.style.flexShrink = 1;
+      legendItem.style.flexBasis = 0;
+      
+      legendItem.style.border = '2px solid white';
+      
+      legendItem.style.justifyContent = 'center';
+      legendItem.style.backgroundColor = pie3d.backgroundColor;
+
+      // in case the items flow in a second row, add some margin to have vertical space between them
+      legendItem.style.marginTop = '2px';
+      legendItem.style.marginBottom = '2px';
+
+      legendItem.style.padding= '0.5em 1em';
+      legendItem.classList.add('candy-pie-legend-item');
+
+      legendItem.onclick = function() { scaleSegment(pie3d, i); };
+      legendItem.style.cursor = 'pointer';
+
+      // little circle 
+      let circleItem = document.createElement("div");
+      circleItem.textContent = ' ';
+      circleItem.style.borderRadius = '50%';
+      circleItem.style.backgroundColor = pie3d.slices[i].color;
+      circleItem.style.width = pixelSize;
+      circleItem.style.height = pixelSize; // even this does not guarantees same width & height
+      circleItem.style.border = 'solid white 3px';
+      circleItem.style.marginRight = '8px';
+
+      // text item
+      let textItem = document.createElement("div");
+      textItem.textContent = pie3d.slices[i].label;
+      
+      textItem.style.color = pie3d.labelColor || 'white'; // or the flip color, remember ?
+      textItem.style.fontSize = pixelSize;
+      textItem.style.fontWeight = 'bold';
+
+      if ( pie3d.slices[i].label) {
+        legendDiv.appendChild(legendItem);
+        legendItem.appendChild(circleItem);
+        legendItem.appendChild(textItem);
+      }
+      
+    }
+  }
+}
+
+
+function scaleSegment(pie3d, i) {
+  
+  let newScale = pie3d.scene.meshes[i].scaling.x > 1 ? 1 : 1 + pie3d.clickScalePct / 100;
+  console.log('newscale', newScale);
+  
+  pie3d.scene.meshes[i].scaling.x = newScale;
+  pie3d.scene.meshes[i].scaling.y = newScale;
+  pie3d.scene.meshes[i].scaling.z = newScale;
 }
 
 
@@ -373,5 +469,8 @@ function candy_pie_babylon ( pie3d) {
       
   window.addEventListener("resize", function () {
     pie3d.engine.resize();
+    pie3d.legendDiv.style.width = pie3d.canvas.width + 'px';
   });
+
+  add_legend( pie3d);
 }

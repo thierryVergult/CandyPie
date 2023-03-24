@@ -345,9 +345,15 @@
         <div class='header'>holiday pie chart</div>
         <div class='article'>
 
-          <p>with rotation.</p>
+          <p>with rotation & legend.</p>
           <div>
             <canvas id='canvas-007' class='candy-pie-babylon-canvas' style="width:75%; margin-left: 12%; aspect-ratio: 4/3"></canvas>
+
+            <pre>
+            
+              'addLegend': true
+              
+            </pre>
 
             <script>
               candy_pie_babylon( {
@@ -369,7 +375,8 @@
                 'verticalFactor': 2,
                 'allowVerticalRotation' : false,
                 'cameraDegreesY': 30,
-                'secondsPerRotation': 5
+                'secondsPerRotation': 5,
+                'addLegend': true
               });
             </script>
 

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>3d pie chart - base for development</title>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width">
+    <meta name="mobile-web-app-capable" content="yes">    
+
+    <script src="https://cdn.babylonjs.com/babylon.js"></script>
+    <script src="./candy-pie-babylon.js"></script>
+
+    <style>
+      
+      /* global css variable */
+      :root {
+        --main-color: #009FC2;
+        --opposite-color: white;
+      }
+      
+      .container {
+        margin: 30px;
+        width: 50%;
+      }
+      
+
+      .candy-pie-babylon-canvas {
+        touch-action: none;  /* Disables browsers from handling all pan and zoom interactions */
+        width: 100%;
+        outline: none; /* remove outline when clicking on canvas */
+        margin-top: 10px;
+      }
+      
+    </style>
+
+  </head>
+
+  <body>
+    <div class='container'>
+
+      <h4>a candy pie</h4>
+
+      <canvas id='canvas-id' class='candy-pie-babylon-canvas'></canvas>
+
+      <p>this is the end.</p>
+
+      <p>legend session I: to do</p>
+      <ul>
+        <li>on click of legend item</li>
+      </ul>
+      
+      
+      <script>
+        let pie3d_001 = {
+            'htmlCanvasId': 'canvas-id',
+            'slices': [
+              { 'height': 100, 'color': 'indianred', 'label': 'one'},
+              { 'height': 100, 'color': 'steelblue', 'label': 'two'},
+              { 'height': 100, 'color': 'olive', 'label': 'three'}
+            ],
+            'addLegend': true,
+            'showLabel': true,
+            'clickScalePct': 20
+          };
+            candy_pie_babylon( pie3d_001);
+      </script>
+
+    </div>    
+  </body>
+</html>
