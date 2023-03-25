@@ -356,16 +356,26 @@ function setPie3d( pie3d) {
 
 
 function add_legend( pie3d) {
+
+  // first cleanup from previous calls (like in the playground)
+  if ( pie3d.legendDiv ) { 
+    pie3d.legendDiv.remove();
+  }
+  
   const legendDiv = document.createElement("div");
   pie3d.legendDiv = legendDiv;
+
+  cntLegendItems = 0;
   
   if (pie3d.addLegend) {
 
     // position the legend like the canvas.
     // marginLeft not yet adjusted when the engine resizes
     // other solution could be to set the canvas position as relative, and this legend div as absolute against the canvas. (offsetting the height)
-    legendDiv.style.width = pie3d.canvas.width + 'px';
-    legendDiv.style.marginLeft = pie3d.canvas.style.marginLeft;
+
+    let computedStyles = window.getComputedStyle( pie3d.canvas);
+    legendDiv.style.width = computedStyles.getPropertyValue("width");
+    legendDiv.style.marginLeft = computedStyles.getPropertyValue("margin-left");
 
     legendDiv.style.marginTop = '6px';
     
@@ -431,8 +441,14 @@ function add_legend( pie3d) {
         legendDiv.appendChild(legendItem);
         legendItem.appendChild(circleItem);
         legendItem.appendChild(textItem);
+
+        cntLegendItems += cntLegendItems;
       }
       
+    }
+
+    if (cntLegendItems == 0) {
+      console.log( 'addLegend true but no labels found, so no legend items created.');
     }
   }
 }
@@ -441,11 +457,11 @@ function add_legend( pie3d) {
 function scaleSegment(pie3d, i) {
   
   let newScale = pie3d.scene.meshes[i].scaling.x > 1 ? 1 : 1 + pie3d.clickScalePct / 100;
-  console.log('newscale', newScale);
   
-  pie3d.scene.meshes[i].scaling.x = newScale;
-  pie3d.scene.meshes[i].scaling.y = newScale;
-  pie3d.scene.meshes[i].scaling.z = newScale;
+  // find the actionManager for the given donut.
+  let actionManager = pie3d.scene.meshes.find( m => m.id == 'donut-' + i).actionManager;
+  // find the scaling action and execute
+  actionManager.actions.find( a => a._property == 'scaling').execute();
 }
 
 

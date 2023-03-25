@@ -174,6 +174,11 @@
     <p class="configOption">labelExtraTopMargin</p>
       <input type="number" name="labelExtraTopMargin"  min="1" max="50" onchange="pie3d[this.name] = this.value;">  
       <br>
+
+    <p class="configOption">addLegend</p>
+      <label>false</label><input type="radio" name="addLegend" value="0" onchange="pie3d[this.name] = Boolean( Number(this.value));">
+      <label>true </label><input type="radio" name="addLegend" value="1" onchange="pie3d[this.name] = Boolean( Number(this.value));">
+      <br>
     
     <script>
       let pie3d = {
@@ -192,8 +197,9 @@
               
       candy_pie_babylon( pie3d);
 
-      // push the pie3d values to the configuration elements above
+      // push the pie3d (default) values to the html - configuration elements.
       
+      // ps: for a boolean, convert the boolean value to Number (0/1) and use that as the index to set the first or second element to checked
       document.getElementsByName("spaceBetweenSlices")[Number(pie3d.spaceBetweenSlices)].checked = true;
       document.getElementsByName("innerRadiusPct")[0].value = pie3d.innerRadiusPct;
       document.getElementsByName("backgroundColor")[0].value = pie3d.backgroundColor;
@@ -208,6 +214,7 @@
       document.getElementsByName("labelFontFactor")[0].value = pie3d.labelFontFactor;
       document.getElementsByName("labelExtraTopMargin")[0].value = pie3d.labelExtraTopMargin;
       document.getElementsByName("labelColor")[0].value = pie3d.labelColor;
+      document.getElementsByName("addLegend")[Number(pie3d.addLegend)].checked = true;
 
       var colorEditor = function( cell, onRendered, success, cancel, editorParams) {
 
