@@ -256,6 +256,11 @@ function pieChart (pie3d) {
     // increment rotY for the next slice
     rotY = rotY + ( 2 * Math.PI * p.arcPct / 100);
     sliceNr = sliceNr + 1;
+    
+    if (!pie3d.spinTo[i]) {
+      // first slice starts with - π / 2, then subtract half of the previous slice and subtract half of the actual slice
+      pie3d.spinTo[i] = pie3d.spinTo[i-1] - (Math.PI * slices[i-1].arcPct / 100) - (Math.PI * slices[i].arcPct / 100);
+    }
         
   }
 }
@@ -353,7 +358,7 @@ function setPie3d( pie3d) {
   pie3d.diameter = 4;
   pie3d.cameraFovFactor = 2.2; // add this to the calculated FOV so there are some margins.
   
-  pie3d.spinTo = [ -3/6 * Math.PI, -7/6 * Math.PI, -11/6 * Math.PI];
+  pie3d.spinTo = [ -Math.PI/2];
   
   console.log( 'pie3d defaulted', pie3d);
 }
@@ -489,7 +494,7 @@ function spinTo( pie3d, property, targetval, speed) {
   let camera = pie3d.scene.cameras[0], // only 1 camera, take the 1st
       ease = new BABYLON.CubicEase();
   ease.setEasingMode(BABYLON.EasingFunction.EASINGMODE_EASEINOUT);
-  console.log( 'spinTo', 'actual val', property, camera[property]);
-  // works fine for alpha, beta, radius
+  //console.log( 'spinTo', 'actual val', property, camera[property]);
+  // works fine at least for alpha, beta, radius
   BABYLON.Animation.CreateAndStartAnimation('at4', camera, property, speed, 120, camera[property], targetval, 0, ease);
 }

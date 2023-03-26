@@ -202,16 +202,18 @@ function pieChart (pie3d) {
         BABYLON.ActionManager.OnPickTrigger, 
         donut, 
         "scaling", 
-         new BABYLON.Vector3( clickScale, clickScale, clickScale), 
-        250, // duration
-        undefined, // condition
-        undefined, // stopOtherAnimations
-        function() { // onInterpolationDone: defines a callback raised once the interpolation animation has been done
-          //console.log('click: ', this.value);
-          this.value._x = ( this.value._x > 1 ? 1 : clickScale);
-          this.value._y = ( this.value._y > 1 ? 1 : clickScale);
-          this.value._z = ( this.value._z > 1 ? 1 : clickScale);
-        }
+        new BABYLON.Vector3( clickScale, clickScale, clickScale), 
+        500, // duration
+      )
+    )
+    .then(
+      // back to normal (1) for the next click, but now the button click is only working once, and we cannot get back to 1
+      new BABYLON.InterpolateValueAction(
+        BABYLON.ActionManager.OnPickTrigger, 
+        donut, 
+        "scaling", 
+        new BABYLON.Vector3( 1, 1, 1), 
+        500
       )
     );
 
@@ -245,7 +247,7 @@ function pieChart (pie3d) {
   let sliceNr = 0;
   
   for ( let i = 0; i < slices.length; i++) {
-        
+    
     let p = slices[i],
         h = p.height / maxVal * pie3d.verticalFactor;
   
@@ -254,6 +256,11 @@ function pieChart (pie3d) {
     // increment rotY for the next slice
     rotY = rotY + ( 2 * Math.PI * p.arcPct / 100);
     sliceNr = sliceNr + 1;
+    
+    if (!pie3d.spinTo[i]) {
+      // first slice starts with - π / 2, then subtract half of the previous slice and subtract half of the actual slice
+      pie3d.spinTo[i] = pie3d.spinTo[i-1] - (Math.PI * slices[i-1].arcPct / 100) - (Math.PI * slices[i].arcPct / 100);
+    }
         
   }
 }
@@ -351,6 +358,8 @@ function setPie3d( pie3d) {
   pie3d.diameter = 4;
   pie3d.cameraFovFactor = 2.2; // add this to the calculated FOV so there are some margins.
   
+  pie3d.spinTo = [ -Math.PI/2];
+  
   console.log( 'pie3d defaulted', pie3d);
 }
 
@@ -416,7 +425,7 @@ function add_legend( pie3d) {
       legendItem.style.padding= '0.5em 1em';
       legendItem.classList.add('candy-pie-legend-item');
 
-      legendItem.onclick = function() { scaleSegment(pie3d, i); };
+      legendItem.onclick = function() { spinTo(pie3d, 'alpha', pie3d.spinTo[i], 80); };
       legendItem.style.cursor = 'pointer';
 
       // little circle 
@@ -454,17 +463,6 @@ function add_legend( pie3d) {
 }
 
 
-function scaleSegment(pie3d, i) {
-  
-  let newScale = pie3d.scene.meshes[i].scaling.x > 1 ? 1 : 1 + pie3d.clickScalePct / 100;
-  
-  // find the actionManager for the given donut.
-  let actionManager = pie3d.scene.meshes.find( m => m.id == 'donut-' + i).actionManager;
-  // find the scaling action and execute
-  actionManager.actions.find( a => a._property == 'scaling').execute();
-}
-
-
 function candy_pie_babylon ( pie3d) {
 
   pie3d.canvas = document.getElementById( pie3d.htmlCanvasId);
@@ -489,4 +487,14 @@ function candy_pie_babylon ( pie3d) {
   });
 
   add_legend( pie3d);
+}
+
+
+function spinTo( pie3d, property, targetval, speed) {
+  let camera = pie3d.scene.cameras[0], // only 1 camera, take the 1st
+      ease = new BABYLON.CubicEase();
+  ease.setEasingMode(BABYLON.EasingFunction.EASINGMODE_EASEINOUT);
+  //console.log( 'spinTo', 'actual val', property, camera[property]);
+  // works fine at least for alpha, beta, radius
+  BABYLON.Animation.CreateAndStartAnimation('at4', camera, property, speed, 120, camera[property], targetval, 0, ease);
 }
