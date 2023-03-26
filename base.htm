@@ -44,13 +44,12 @@
 
       <p>legend session to do</p>
       <ul>
-        <li>label + value, cf text on pie slice, so use a common function
-        <li>on click of legend item, try to move the slice to the front (via action?)
+        <li>on click of legend item, rotate the slice to the front (via animation)
       </ul>
       
       
       <script>
-        let pie3d_001 = {
+        let pie3d = {
             'htmlCanvasId': 'canvas-id',
             'slices': [
               { 'height': 100, 'color': 'indianred', 'label': 'one'},
@@ -59,9 +58,11 @@
             ],
             'addLegend': true,
             'showLabel': true,
-            'clickScalePct': 20
+            'clickScalePct': 20,
+            'secondsPerRotation': 0,
+            'allowVerticalRotation': true
           };
-            candy_pie_babylon( pie3d_001);
+            candy_pie_babylon( pie3d);
       </script>
 
     </div>    
