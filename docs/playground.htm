@@ -180,6 +180,11 @@
       <label>true </label><input type="radio" name="addLegend" value="1" onchange="pie3d[this.name] = Boolean( Number(this.value));">
       <br>
     
+    <p class="configOption">rotationSlowDown</p>
+      <label>false</label><input type="radio" name="rotationSlowDown" value="0" onchange="pie3d[this.name] = Boolean( Number(this.value));">
+      <label>true </label><input type="radio" name="rotationSlowDown" value="1" onchange="pie3d[this.name] = Boolean( Number(this.value));">
+      <br>
+
     <script>
       let pie3d = {
         htmlCanvasId: 'canvas-id',
@@ -215,6 +220,7 @@
       document.getElementsByName("labelExtraTopMargin")[0].value = pie3d.labelExtraTopMargin;
       document.getElementsByName("labelColor")[0].value = pie3d.labelColor;
       document.getElementsByName("addLegend")[Number(pie3d.addLegend)].checked = true;
+      document.getElementsByName("rotationSlowDown")[Number(pie3d.rotationSlowDown)].checked = true;
 
       var colorEditor = function( cell, onRendered, success, cancel, editorParams) {
 

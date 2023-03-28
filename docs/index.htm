@@ -416,10 +416,11 @@
 
 
       <div class='card' id='vertical'>
-        <div class='header'>higher slices</div>
+        <div class='header'>higher slices with a legend</div>
         <div class='article'>
           <p>This pie chart has also 5 slices, all with same width (arc), but the slices are all made higher than in the previous pie chart. 
             This is done via the <i>verticalFactor</i> configuration option, which stretches the slices vertically.</p>
+          <p>Add a legend, with an item for each slice with a label. Clicking on the item brings the slice in front.</p>
   
         <div>
           <canvas id='candy-pie-babylon-canvas-id2' class='candy-pie-babylon-canvas' style="width:80%; margin-left: 10%; aspect-ratio: 1/1"></canvas>
@@ -441,7 +442,8 @@
               labelFontFactor: 1.5,
               backgroundColor: 'rgb(155, 102, 102)',
               clickScalePct: 20,
-              verticalFactor: 4
+              verticalFactor: 4,
+              addLegend: true
             };
             
             candy_pie_babylon( pie3d2);
@@ -449,7 +451,8 @@
 
           <pre>
             
-            verticalFactor: 4
+            verticalFactor: 4,
+            addLegend: true
             
           </pre>
   
@@ -464,8 +467,8 @@
         <div class='article'>
 
           <p>This pie chart has 4 equal slices. Some label-configuration options are used to position & color the labels on the pie.</p>
-          <p>And the chart does a full rotation in 5 seconds.</p>
-          <p>And has a legend</p>
+          <p>And the chart does a full rotation in 5 seconds at the beginning, slowing downn</p>
+          
           <div>
             <canvas id='candy-pie-babylon-canvas-id3' class='candy-pie-babylon-canvas' style="width:75%; margin-left: 12%; aspect-ratio: 4/3"></canvas>
 
@@ -490,7 +493,7 @@
                 allowVerticalRotation : false,
                 cameraDegreesY: 30,
                 secondsPerRotation: 5,
-                addLegend: true
+                rotationSlowDown: true
               });
             </script>
 
@@ -505,7 +508,7 @@
               allowVerticalRotation : false,
               cameraDegreesY: 60,
               secondsPerRotation: 5,
-              addLegend: true
+              rotationSlowDown: true
 
             </pre>
 

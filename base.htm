@@ -42,9 +42,10 @@
 
       <canvas id='canvas-id' class='candy-pie-babylon-canvas'></canvas>
 
-      <p>legend session to do</p>
+      <p>to do</p>
       <ul>
-        <li>on click of legend item, rotate the slice to the front (via animation)
+        <li>option to stop rotation (increase counter in render loop)
+        <li>hover functionality : show here label, conditionally arc % (remove from slice material), conditionally height value</li>
       </ul>
       
       
@@ -57,11 +58,12 @@
               { 'height': 100, 'color': 'olive', 'label': 'three'},
               { 'height': 120, 'color': 'khaki', 'label': 'four'}
             ],
-            'addLegend': true,
+            'addLegend': false,
             'showLabel': true,
             'clickScalePct': 20,
-            'secondsPerRotation': 0,
-            'allowVerticalRotation': true
+            'secondsPerRotation': 10,
+            'allowVerticalRotation': true,
+            'rotationSlowDown': true
           };
             candy_pie_babylon( pie3d);
       </script>

@@ -24,6 +24,7 @@
       labelColor
       secondsPerRotation
       addLegend
+      rotationSlowDown
 
     data for each slice in an array, slices, as part of the pie3d object,  fields being 
     - height
@@ -156,7 +157,7 @@ function pieChart (pie3d) {
       textOnSlice = label
     }
 
-    if ( pie3d.showHeight) {
+    if ( pie3d.showHeight) { // remove this when the hover functionality gets implemented
       textOnSlice = textOnSlice + ( pie3d.showLabel && textOnSlice ? ': ': '') + value
     }
 
@@ -219,7 +220,7 @@ function pieChart (pie3d) {
 
     if ( pie3d.secondsPerRotation > 0 ) {
       pie3d.scene.registerAfterRender( function () {
-        let extraAnglePerFrame = 2*Math.PI/60 / pie3d.secondsPerRotation;
+        let extraAnglePerFrame = pie3d.secondsPerRotation > 0 ? 2*Math.PI/60 / pie3d.secondsPerRotation : 0;
         donut.addRotation( 0, extraAnglePerFrame, 0);
 
         if (pie3d.spaceBetweenSlices) {
@@ -347,6 +348,14 @@ function setPie3d( pie3d) {
   setDefault( 'labelColor', '');
   setDefault( 'secondsPerRotation', 0);
   setDefault( 'addLegend', false);
+  setDefault( 'rotationSlowDown', false);
+
+  if (pie3d.addLegend && (pie3d.secondsPerRotation > 0)) {
+    // the rotation interferes with the repositioning of the camera when clicking on a legend item.
+    // Give preference to the legend functionality.
+    console.log( 'Candy Pie: set seconds per rotation to zero');
+    pie3d.secondsPerRotation = 0;
+  }
 
   let slices = pie3d.slices.length;
   for (let i = 0; i < slices; i++) {
@@ -479,6 +488,13 @@ function candy_pie_babylon ( pie3d) {
   
   pie3d.engine.runRenderLoop(function () {
     scene.render();
+
+    // slow down, little by little in case rotationSlowDown is set.
+    pie3d.secondsPerRotation *= pie3d.rotationSlowDown ? 1.0005 : 1;
+    if (pie3d.secondsPerRotation > 100) {
+      pie3d.secondsPerRotation = 0;
+    }
+
   });
       
   window.addEventListener("resize", function () {
