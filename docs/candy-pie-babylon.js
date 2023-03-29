@@ -108,12 +108,12 @@ candyPie.addHover = function( {pie3d, mesh, label, height, arcPct, color}) {
     return;
   }
   
-  let buttonTxt = '';
-  buttonTxt += pie3d.hoverShowLabel ? label : '';
-  buttonTxt += pie3d.hoverShowHeight ? '\n ' + height : '';
-  buttonTxt += pie3d.hoverShowArcPct ? '\n ' + (arcPct*100) + '%' : '';
+  let hoverTxt = '';
+  hoverTxt += pie3d.hoverShowLabel ? label : '';
+  hoverTxt += pie3d.hoverShowHeight ? '\n ' + height : '';
+  hoverTxt += pie3d.hoverShowArcPct ? '\n ' + (arcPct*100) + '%' : '';
 
-  let button = BABYLON.GUI.Button.CreateSimpleButton( mesh.id + '-hover', buttonTxt);
+  let button = BABYLON.GUI.Button.CreateSimpleButton( mesh.id + '-hover', hoverTxt);
   button.width = (label.length > 12 ? 250 : 150 ) + "px";
   button.height = (25 * ((pie3d.hoverShowLabel + pie3d.hoverShowHeight + pie3d.hoverShowArcPct)+1)) + "px";
 
@@ -125,6 +125,9 @@ candyPie.addHover = function( {pie3d, mesh, label, height, arcPct, color}) {
   button.thickness = 4;
   button.scaleX = 0; // wil be changed via animations
   button.scaleY = 0; // wil be changed via animations
+  
+  // default true for a button, set it to false for mobile, so we can the place to touch again on the hover box to get it dissapear
+  button.isPointerBlocker = false;
   
   pie3d.gui.addControl(button);
 
