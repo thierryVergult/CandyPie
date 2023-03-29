@@ -124,10 +124,10 @@
       <input type="number" name="secondsPerRotation" min="0" max="100" onchange="pie3d[this.name] = this.value;">
       <span>s</span>
       <br>
-    
-    <p class="configOption">clickScalePct</p>
-      <input type="number" name="clickScalePct" min="0" max="100" onchange="pie3d[this.name] = this.value;">
-      <span>%</span>
+
+    <p class="configOption">rotationSlowDown</p>
+      <label>false</label><input type="radio" name="rotationSlowDown" value="0" onchange="pie3d[this.name] = Boolean( Number(this.value));">
+      <label>true </label><input type="radio" name="rotationSlowDown" value="1" onchange="pie3d[this.name] = Boolean( Number(this.value));">
       <br>
     
     <p class="configOption">allowVerticalRotation</p>
@@ -190,11 +190,6 @@
       <label>false</label><input type="radio" name="addLegend" value="0" onchange="pie3d[this.name] = Boolean( Number(this.value));">
       <label>true </label><input type="radio" name="addLegend" value="1" onchange="pie3d[this.name] = Boolean( Number(this.value));">
       <br>
-    
-    <p class="configOption">rotationSlowDown</p>
-      <label>false</label><input type="radio" name="rotationSlowDown" value="0" onchange="pie3d[this.name] = Boolean( Number(this.value));">
-      <label>true </label><input type="radio" name="rotationSlowDown" value="1" onchange="pie3d[this.name] = Boolean( Number(this.value));">
-      <br>
 
     <script>
       let pie3d = {
@@ -220,7 +215,7 @@
       document.getElementsByName("innerRadiusPct")[0].value = pie3d.innerRadiusPct;
       document.getElementsByName("backgroundColor")[0].value = pie3d.backgroundColor;
       document.getElementsByName("secondsPerRotation")[0].value = pie3d.secondsPerRotation;
-      document.getElementsByName("clickScalePct")[0].value = pie3d.clickScalePct;
+      document.getElementsByName("rotationSlowDown")[Number(pie3d.rotationSlowDown)].checked = true;
       document.getElementsByName("allowVerticalRotation")[Number(pie3d.allowVerticalRotation)].checked = true;
       document.getElementsByName("verticalFactor")[0].value = pie3d.verticalFactor;
       document.getElementsByName("cameraDegreesY")[0].value = pie3d.cameraDegreesY;
@@ -233,7 +228,6 @@
       document.getElementsByName("labelExtraTopMargin")[0].value = pie3d.labelExtraTopMargin;
       document.getElementsByName("labelColor")[0].value = pie3d.labelColor;
       document.getElementsByName("addLegend")[Number(pie3d.addLegend)].checked = true;
-      document.getElementsByName("rotationSlowDown")[Number(pie3d.rotationSlowDown)].checked = true;
 
       var colorEditor = function( cell, onRendered, success, cancel, editorParams) {
 

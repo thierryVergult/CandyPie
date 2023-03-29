@@ -103,10 +103,6 @@ candyPie.addHover = function( {pie3d, mesh, label, height, arcPct, color}) {
     console.log(msg);
     return msg;
   }
-
-  if (!pie3d.gui) {
-    pie3d.gui = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
-  }
   
   if ( !pie3d.hoverShowLabel && !pie3d.hoverShowHeight && !pie3d.hoverShowArcPct) {
     return;
@@ -129,7 +125,7 @@ candyPie.addHover = function( {pie3d, mesh, label, height, arcPct, color}) {
   button.thickness = 4;
   button.scaleX = 0; // wil be changed via animations
   button.scaleY = 0; // wil be changed via animations
-
+  
   pie3d.gui.addControl(button);
 
   button.linkWithMesh(mesh);
@@ -319,6 +315,7 @@ candyPie.pieChart = function(pie3d) {
   let rotY = Math.PI/2 - 2 * Math.PI * slices[0].arcPct / 100 / 2;
   let sliceNr = 0;
   
+  pie3d.gui = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
   pie3d.hoverState = [];
 
   for ( let i = 0; i < slices.length; i++) {
