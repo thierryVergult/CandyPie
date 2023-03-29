@@ -8,6 +8,7 @@
     <meta name="mobile-web-app-capable" content="yes">    
 
     <script src="https://cdn.babylonjs.com/babylon.js"></script>
+    <script src="https://cdn.babylonjs.com/gui/babylon.gui.js"></script>
     <script src="./candy-pie-babylon.js"></script>
 
     <style>
@@ -44,8 +45,7 @@
 
       <p>to do</p>
       <ul>
-        <li>option to stop rotation (increase counter in render loop)
-        <li>hover functionality : show here label, conditionally arc % (remove from slice material), conditionally height value</li>
+        <li>nice to have: hover angle</li>
       </ul>
       
       
@@ -53,19 +53,22 @@
         let pie3d = {
             'htmlCanvasId': 'canvas-id',
             'slices': [
-              { 'height': 100, 'color': 'indianred', 'label': 'one'},
+              { 'height': 100, 'color': 'indianred', 'label': 'one one'},
               { 'height': 100, 'color': 'steelblue', 'label': 'two'},
               { 'height': 100, 'color': 'olive', 'label': 'three'},
               { 'height': 120, 'color': 'khaki', 'label': 'four'}
             ],
-            'addLegend': false,
-            'showLabel': true,
+            'addLegend': true,
+            'sliceShowLabel': true,
             'clickScalePct': 20,
             'secondsPerRotation': 10,
             'allowVerticalRotation': true,
-            'rotationSlowDown': true
+            'rotationSlowDown': true,
+            'hoverShowLabel': true,
+            'hoverShowHeight': true,
+            'hoverShowArcPct': true
           };
-            candy_pie_babylon( pie3d);
+        candyPie.babylon( pie3d);
       </script>
 
     </div>    

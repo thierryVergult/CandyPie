@@ -15,16 +15,17 @@
       allowVerticalRotation
       spaceBetweenSlices
       innerRadiusPct
-      showLabel
-      showHeight
       labelFontFactor
       labelExtraTopMargin
       backgroundColor
-      clickScalePct
       labelColor
       secondsPerRotation
       addLegend
       rotationSlowDown
+      sliceShowLabel
+      hoverShowLabel
+      hoverShowHeight
+      hoverShowArcPct
 
     data for each slice in an array, slices, as part of the pie3d object,  fields being 
     - height
@@ -40,17 +41,21 @@
     
 */
 
+candyPie = {};
 
-// thanks: https://stackoverflow.com/questions/1573053/javascript-function-to-convert-color-names-to-hex-codes
-function colorHex(str){
+candyPie.colorHex = function(str) {
+  // thanks: https://stackoverflow.com/questions/1573053/javascript-function-to-convert-color-names-to-hex-codes
+  
   var ctx = document.createElement('canvas').getContext('2d');
   ctx.fillStyle = str;
   
   return ctx.fillStyle;
 }
 
-// thanks: https://stackoverflow.com/questions/35969656/how-can-i-generate-the-opposite-color-according-to-current-color
-function invertColor(hex, bw) {
+
+candyPie.invertColor = function(hex, modeBlackWhite) {
+  // thanks: https://stackoverflow.com/questions/35969656/how-can-i-generate-the-opposite-color-according-to-current-color
+  
   if (hex.indexOf('#') === 0) {
       hex = hex.slice(1);
   }
@@ -59,12 +64,12 @@ function invertColor(hex, bw) {
       hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
   }
   if (hex.length !== 6) {
-      throw new Error('Invalid HEX color.');
+      throw new Error('Invalid HEX color. Length ' + hex.length);
   }
   var r = parseInt(hex.slice(0, 2), 16),
       g = parseInt(hex.slice(2, 4), 16),
       b = parseInt(hex.slice(4, 6), 16);
-  if (bw) {
+  if (modeBlackWhite) {
       // https://stackoverflow.com/a/3943023/112731
       return (r * 0.299 + g * 0.587 + b * 0.114) > 186
           ? '#000000'
@@ -75,17 +80,12 @@ function invertColor(hex, bw) {
   g = (255 - g).toString(16);
   b = (255 - b).toString(16);
   // pad each with zeros and return
-  return "#" + padZero(r) + padZero(g) + padZero(b);
+  return "#" + r.padStart(2, '0') + g.padStart(2, '0') + b.padStart(2, '0');
 }
 
-function padZero(str, len) {
-  len = len || 2;
-  var zeros = new Array(len).join('0');
-  return (zeros + str).slice(-len);
-}
 
-// Center point is p1; angle returned in Radians
-function angleBetween3Points(p0,p1,p2) {
+candyPie.angleBetween3Points = function(p0,p1,p2) {
+  // Center point is p1; angle returned in Radians
   var b = Math.pow(p1.x-p0.x,2) + Math.pow(p1.y-p0.y,2),
       a = Math.pow(p1.x-p2.x,2) + Math.pow(p1.y-p2.y,2),
       c = Math.pow(p2.x-p0.x,2) + Math.pow(p2.y-p0.y,2);
@@ -94,12 +94,114 @@ function angleBetween3Points(p0,p1,p2) {
   // console.log( 'angleBetween3Points', radians, 'degrees', ( radians * (180 / Math.PI)).toFixed(2))
   return radians;
 }
+
+
+candyPie.addHover = function( {pie3d, mesh, label, height, arcPct, color}) {
   
-function pieChart (pie3d) {
+  if (!BABYLON.GUI) {
+    let msg = 'Babylon gui library not present. Hover not possible.';
+    console.log(msg);
+    return msg;
+  }
+
+  if (!pie3d.gui) {
+    pie3d.gui = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
+  }
   
-  let oneSlice = function( height, arcFraction, color, label, value) {
+  if ( !pie3d.hoverShowLabel && !pie3d.hoverShowHeight && !pie3d.hoverShowArcPct) {
+    return;
+  }
+  
+  let buttonTxt = '';
+  buttonTxt += pie3d.hoverShowLabel ? label : '';
+  buttonTxt += pie3d.hoverShowHeight ? '\n ' + height : '';
+  buttonTxt += pie3d.hoverShowArcPct ? '\n ' + (arcPct*100) + '%' : '';
+
+  let button = BABYLON.GUI.Button.CreateSimpleButton( mesh.id + '-hover', buttonTxt);
+  button.width = (label.length > 12 ? 250 : 150 ) + "px";
+  button.height = (25 * ((pie3d.hoverShowLabel + pie3d.hoverShowHeight + pie3d.hoverShowArcPct)+1)) + "px";
+
+  button.background = color;
+  button.color = candyPie.invertColor( candyPie.colorHex(color), true);
+  button.alpha = 0.6;
+  
+  button.cornerRadius = 20;
+  button.thickness = 4;
+  button.scaleX = 0; // wil be changed via animations
+  button.scaleY = 0; // wil be changed via animations
+
+  pie3d.gui.addControl(button);
+
+  button.linkWithMesh(mesh);
+
+  button.rotation = 0; //Math.PI / 16;
+
+  // add 2 animations to the mesh
+  let actionManager = new BABYLON.ActionManager(pie3d.scene);
+
+  mesh.actionManager = actionManager;
+
+  let keys = [
+    { frame:  0, value: 0}, 
+    { frame: 10, value: 1}
+  ];
+
+  let scaleXAnimation = new BABYLON.Animation("hoverX", "scaleX",   30, BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
+  let scaleYAnimation = new BABYLON.Animation("hoverY", "scaleY",   30, BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
+  let scaleRotation   = new BABYLON.Animation("hoverR", "rotation", 30, BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
+
+  scaleXAnimation.setKeys(keys);
+  scaleYAnimation.setKeys(keys);
+
+  pie3d.rotationAnimationKeys = [
+    { frame:  0, value: 0},
+    { frame: 10, value: (mesh.id.slice(-1)%3-1) * 0.1}
+  ];
+  scaleRotation.setKeys( pie3d.rotationAnimationKeys);
+
+  button.animations = [scaleXAnimation, scaleYAnimation, scaleRotation];
+
+  actionManager.registerAction(
+    new BABYLON.ExecuteCodeAction(
+      BABYLON.ActionManager.OnPickTrigger, 
+      function(ev){
+        if ( ! pie3d.hoverState[mesh.id]) {
+          //console.log( 'click', button.linkedMesh.name, 'y', button.linkedMesh.rotation.y, button, button.left, button.top);
+          console.log( 'click', button.name,
+            'H', button._cachedParentMeasure.height, 
+            'h', button._currentMeasure.height + button._currentMeasure.top,
+            'h%', Math.trunc((button._currentMeasure.height + button._currentMeasure.top)/button._cachedParentMeasure.height * 100) - 50, ''
+            //'W', button._cachedParentMeasure.width,
+            //'w', button._currentMeasure.width + button._currentMeasure.left
+            );
+          pie3d.scene.beginAnimation(button, 0, 10, false);
+          pie3d.hoverState[mesh.id] = true;
+
+        } else if ( pie3d.hoverState[mesh.id]) {
+          pie3d.scene.beginAnimation(button, 10, 0, false);
+          pie3d.hoverState[mesh.id] = false;
+
+        }
+      }));
+  
+  //if hover is over remove highlight of the mesh
+  actionManager.registerAction(
+    new BABYLON.ExecuteCodeAction(
+      BABYLON.ActionManager.OnPointerOutTrigger, 
+      function(ev){
+        if ( pie3d.hoverState[mesh.id]) {
+          pie3d.scene.beginAnimation(button, 10, 0, false);
+          pie3d.hoverState[mesh.id] = false;
+        }
+      }));
+}
+
+
+candyPie.pieChart = function(pie3d) {
+  
+  let oneSlice = function( {relativeHeight, arcFraction, color, label, realHeight}) {
     
-    if (height <= 0 || arcFraction <= 0) {
+    if (relativeHeight <= 0 || arcFraction <= 0) {
       return;
     }
 
@@ -112,7 +214,7 @@ function pieChart (pie3d) {
   
     // cylinder with arc
     const pie = BABYLON.MeshBuilder.CreateCylinder( 'pie', {
-      height: Math.abs( height),
+      height: Math.abs( relativeHeight),
       diameter: pie3d.diameter,
       arc: arcFraction,  // fraction of 2 pi (ratio of the circumference between 0 and 1)
       enclose: true,  // activates the left & right side faces
@@ -128,7 +230,7 @@ function pieChart (pie3d) {
     faceUV[1] = faceUV[0]; // clean the text on the extruded (inner) cylinder
   
     const cyl = BABYLON.MeshBuilder.CreateCylinder( 'cyl', {
-      height: Math.abs( height),
+      height: Math.abs( relativeHeight),
       diameter: diameter,
       faceUV: faceUV // contains now no text anymore
     });
@@ -143,31 +245,24 @@ function pieChart (pie3d) {
     // adjust the width & height of the dynamic texture to the slice dimensions, to have constant font
     let texture = new BABYLON.DynamicTexture( 'dynamic texture-' + sliceNr, {
       width: 2048 * arcFraction, // align width with fraction of the arc, to arrive at fixed font (no streching)
-      height: 200 * Math.abs( height) // same for height
+      height: 200 * Math.abs( relativeHeight) // same for height
     });
       
     const fontsize = 32 * pie3d.labelFontFactor;
     const font = ['bold', fontsize + 'px', 'monospace'].join( ' ');
     const blackWhiteVariant = true;
-    const textColor = pie3d.labelColor || invertColor( colorHex(color), blackWhiteVariant);
+    const textColor = pie3d.labelColor || candyPie.invertColor( candyPie.colorHex(color), blackWhiteVariant);
     const textInvertY = true; // see also faceUV[1] : Vector4(1, 0, 0, 1) instead of 0-0 1-1 in the u-v plane (u: horizontal, left to right ; v: vertically up)
   
-    let textOnSlice = '';
-    if ( pie3d.showLabel) {
-      textOnSlice = label
-    }
-
-    if ( pie3d.showHeight) { // remove this when the hover functionality gets implemented
-      textOnSlice = textOnSlice + ( pie3d.showLabel && textOnSlice ? ': ': '') + value
-    }
+    let textOnSlice = pie3d.sliceShowLabel ? label : '';
 
     const txt_X_distance_from_left_hand_edge = 40;
     const txt_Y_distance_from_the_top = ( 60 * ( 1 + ( pie3d.labelFontFactor / 3))) + Number( pie3d.labelExtraTopMargin);
-    console.log( 'txt_Y_distance_from_the_top', txt_Y_distance_from_the_top);
+    //console.log( 'txt_Y_distance_from_the_top', txt_Y_distance_from_the_top);
 
     texture.drawText( textOnSlice, txt_X_distance_from_left_hand_edge, txt_Y_distance_from_the_top, font, textColor, color, textInvertY);
     
-    let mat = new BABYLON.StandardMaterial( 'mat-' + sliceNr); 
+    let mat = new BABYLON.StandardMaterial( 'mat-' + sliceNr);
     mat.diffuseTexture = texture;
   
     donut.material = mat;
@@ -176,7 +271,7 @@ function pieChart (pie3d) {
     cyl.dispose();
   
     // rebase y position, so that all slices sit on the xz-plane
-    donut.position.y = ( height / 2 ) - (pie3d.verticalFactor / 2 );
+    donut.position.y = ( relativeHeight / 2 ) - (pie3d.verticalFactor / 2 );
       
     // rotate over Y
     const halfArcSlice = 2 * Math.PI * arcFraction / 2;
@@ -193,30 +288,7 @@ function pieChart (pie3d) {
       donut.position.z = - Math.sin( rotY + halfArcSlice) * middleRadius;
     }
       
-    // make the donut x% larger on click
-    donut.actionManager = new BABYLON.ActionManager();
-      
-    const clickScale = 1 + ( pie3d.clickScalePct / 100);
-  
-    donut.actionManager.registerAction(
-      new BABYLON.InterpolateValueAction(
-        BABYLON.ActionManager.OnPickTrigger, 
-        donut, 
-        "scaling", 
-        new BABYLON.Vector3( clickScale, clickScale, clickScale), 
-        500, // duration
-      )
-    )
-    .then(
-      // back to normal (1) for the next click, but now the button click is only working once, and we cannot get back to 1
-      new BABYLON.InterpolateValueAction(
-        BABYLON.ActionManager.OnPickTrigger, 
-        donut, 
-        "scaling", 
-        new BABYLON.Vector3( 1, 1, 1), 
-        500
-      )
-    );
+    candyPie.addHover( {"pie3d": pie3d, "mesh": donut, "label": textOnSlice, "height": realHeight, "arcPct": arcFraction, "color": color});
 
     if ( pie3d.secondsPerRotation > 0 ) {
       pie3d.scene.registerAfterRender( function () {
@@ -247,13 +319,15 @@ function pieChart (pie3d) {
   let rotY = Math.PI/2 - 2 * Math.PI * slices[0].arcPct / 100 / 2;
   let sliceNr = 0;
   
+  pie3d.hoverState = [];
+
   for ( let i = 0; i < slices.length; i++) {
     
     let p = slices[i],
         h = p.height / maxVal * pie3d.verticalFactor;
   
-    let slice = oneSlice( h, p.arcPct / 100, p.color, p.label, p.height);
-  
+    let slice = oneSlice({ "relativeHeight": h, "arcFraction": p.arcPct / 100, "color": p.color, "label": p.label, "realHeight": p.height});
+    
     // increment rotY for the next slice
     rotY = rotY + ( 2 * Math.PI * p.arcPct / 100);
     sliceNr = sliceNr + 1;
@@ -266,7 +340,7 @@ function pieChart (pie3d) {
   }
 }
   
-var createPieChartScene = function ( pie3d) {
+candyPie.createPieChartScene = function ( pie3d) {
 
   var scene = new BABYLON.Scene( pie3d.engine);
   
@@ -298,10 +372,10 @@ var createPieChartScene = function ( pie3d) {
   const p0 = { 'x': 0, 'y': 0 };
   const p1 = { 'x': - cameraRadius * Math.sin(angleRad), 'y': cameraRadius * Math.cos(angleRad) };
   const p2_up = { 'x': pie3d.diameter / 2, 'y': pie3d.verticalFactor / 2};
-  const a_up = angleBetween3Points( p0, p1, p2_up);
+  const a_up = candyPie.angleBetween3Points( p0, p1, p2_up);
 
   const p2_down = { 'x': - pie3d.diameter / 2, 'y': -pie3d.verticalFactor / 2};
-  const a_down = angleBetween3Points( p0, p1, p2_down);
+  const a_down = candyPie.angleBetween3Points( p0, p1, p2_down);
     
   camera.fov = Math.max( a_up, a_down) * pie3d.cameraFovFactor;
         
@@ -315,19 +389,19 @@ var createPieChartScene = function ( pie3d) {
   // increment the delay between two clicks to be recognised as one double click
   BABYLON.Scene.DoubleClickDelay = 500; // ms
     
-  let backgroundColor3 = new BABYLON.Color3.FromHexString( colorHex( pie3d.backgroundColor));
+  let backgroundColor3 = new BABYLON.Color3.FromHexString( candyPie.colorHex( pie3d.backgroundColor));
   scene.clearColor = backgroundColor3;
 
   pie3d.scene = scene;
     
   // the very pie chart
-  pieChart( pie3d);
+  candyPie.pieChart( pie3d);
     
   return scene;
 };
 
 
-function setPie3d( pie3d) {
+candyPie.setPie3d = function( pie3d) {
 
   let setDefault = function ( property, defaultValue) {
     if (pie3d[property] == undefined) pie3d[property] = defaultValue;
@@ -339,16 +413,17 @@ function setPie3d( pie3d) {
   setDefault( 'allowVerticalRotation', true);
   setDefault( 'spaceBetweenSlices', false);
   setDefault( 'innerRadiusPct', 0);
-  setDefault( 'showLabel', false);
-  setDefault( 'showHeight', false);
   setDefault( 'labelFontFactor', 1);
   setDefault( 'labelExtraTopMargin', 0);
   setDefault( 'backgroundColor', '#808080');
-  setDefault( 'clickScalePct', 0);
   setDefault( 'labelColor', '');
   setDefault( 'secondsPerRotation', 0);
   setDefault( 'addLegend', false);
   setDefault( 'rotationSlowDown', false);
+  setDefault( 'sliceShowLabel', false);
+  setDefault( 'hoverShowLabel', false);
+  setDefault( 'hoverShowHeight', false);
+  setDefault( 'hoverShowArcPct', false);
 
   if (pie3d.addLegend && (pie3d.secondsPerRotation > 0)) {
     // the rotation interferes with the repositioning of the camera when clicking on a legend item.
@@ -369,11 +444,10 @@ function setPie3d( pie3d) {
   
   pie3d.spinTo = [ -Math.PI/2];
   
-  console.log( 'pie3d defaulted', pie3d);
 }
 
 
-function add_legend( pie3d) {
+candyPie.add_legend = function( pie3d) {
 
   // first cleanup from previous calls (like in the playground)
   if ( pie3d.legendDiv ) { 
@@ -434,7 +508,7 @@ function add_legend( pie3d) {
       legendItem.style.padding= '0.5em 1em';
       legendItem.classList.add('candy-pie-legend-item');
 
-      legendItem.onclick = function() { spinTo(pie3d, 'alpha', pie3d.spinTo[i], 80); };
+      legendItem.onclick = function() { candyPie.spinTo(pie3d, 'alpha', pie3d.spinTo[i], 80); };
       legendItem.style.cursor = 'pointer';
 
       // little circle 
@@ -472,7 +546,7 @@ function add_legend( pie3d) {
 }
 
 
-function candy_pie_babylon ( pie3d) {
+candyPie.babylon = function( pie3d) {
 
   pie3d.canvas = document.getElementById( pie3d.htmlCanvasId);
 
@@ -482,9 +556,9 @@ function candy_pie_babylon ( pie3d) {
   
   pie3d.engine = new BABYLON.Engine( pie3d.canvas, true);
   
-  setPie3d( pie3d);
+  candyPie.setPie3d( pie3d);
 
-  var scene = createPieChartScene( pie3d);
+  var scene = candyPie.createPieChartScene( pie3d);
   
   pie3d.engine.runRenderLoop(function () {
     scene.render();
@@ -502,11 +576,11 @@ function candy_pie_babylon ( pie3d) {
     pie3d.legendDiv.style.width = pie3d.canvas.width + 'px';
   });
 
-  add_legend( pie3d);
+  candyPie.add_legend( pie3d);
 }
 
 
-function spinTo( pie3d, property, targetval, speed) {
+candyPie.spinTo = function( pie3d, property, targetval, speed) {
   let camera = pie3d.scene.cameras[0], // only 1 camera, take the 1st
       ease = new BABYLON.CubicEase();
   ease.setEasingMode(BABYLON.EasingFunction.EASINGMODE_EASEINOUT);

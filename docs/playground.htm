@@ -61,6 +61,7 @@
     </style>
 
     <script src="https://cdn.babylonjs.com/babylon.js"></script>
+    <script src="https://cdn.babylonjs.com/gui/babylon.gui.js"></script>
     <script src="./candy-pie-babylon.js"></script>
 
     <link href="https://unpkg.com/tabulator-tables/dist/css/tabulator.min.css" rel="stylesheet">
@@ -151,14 +152,9 @@
 
     <h3>labels</h3>
 
-    <p class="configOption">showLabel</p>
-      <label>false</label><input type="radio" name="showLabel" value="0" onchange="pie3d[this.name] = Boolean( Number(this.value));">
-      <label>true </label><input type="radio" name="showLabel" value="1" onchange="pie3d[this.name] = Boolean( Number(this.value));">
-      <br>
-
-    <p class="configOption">showHeight</p>
-      <label>false</label><input type="radio" name="showHeight" value="0" onchange="pie3d[this.name] = Boolean( Number(this.value));">
-      <label>true </label><input type="radio" name="showHeight" value="1" onchange="pie3d[this.name] = Boolean( Number(this.value));">
+    <p class="configOption">sliceShowLabel</p>
+      <label>false</label><input type="radio" name="sliceShowLabel" value="0" onchange="pie3d[this.name] = Boolean( Number(this.value));">
+      <label>true </label><input type="radio" name="sliceShowLabel" value="1" onchange="pie3d[this.name] = Boolean( Number(this.value));">
       <br>
 
     <p class="configOption">labelFontFactor</p>
@@ -173,6 +169,21 @@
 
     <p class="configOption">labelExtraTopMargin</p>
       <input type="number" name="labelExtraTopMargin"  min="1" max="50" onchange="pie3d[this.name] = this.value;">  
+      <br>
+
+    <p class="configOption">hoverShowLabel</p>
+      <label>false</label><input type="radio" name="hoverShowLabel" value="0" onchange="pie3d[this.name] = Boolean( Number(this.value));">
+      <label>true </label><input type="radio" name="hoverShowLabel" value="1" onchange="pie3d[this.name] = Boolean( Number(this.value));">
+      <br>
+
+    <p class="configOption">hoverShowHeight</p>
+      <label>false</label><input type="radio" name="hoverShowHeight" value="0" onchange="pie3d[this.name] = Boolean( Number(this.value));">
+      <label>true </label><input type="radio" name="hoverShowHeight" value="1" onchange="pie3d[this.name] = Boolean( Number(this.value));">
+      <br>
+    
+    <p class="configOption">hoverShowArcPct</p>
+      <label>false</label><input type="radio" name="hoverShowArcPct" value="0" onchange="pie3d[this.name] = Boolean( Number(this.value));">
+      <label>true </label><input type="radio" name="hoverShowArcPct" value="1" onchange="pie3d[this.name] = Boolean( Number(this.value));">
       <br>
 
     <p class="configOption">addLegend</p>
@@ -200,7 +211,7 @@
         showLabel: true
       };
               
-      candy_pie_babylon( pie3d);
+      candyPie.babylon( pie3d);
 
       // push the pie3d (default) values to the html - configuration elements.
       
@@ -214,8 +225,10 @@
       document.getElementsByName("verticalFactor")[0].value = pie3d.verticalFactor;
       document.getElementsByName("cameraDegreesY")[0].value = pie3d.cameraDegreesY;
 
-      document.getElementsByName("showLabel")[Number(pie3d.showLabel)].checked = true;
-      document.getElementsByName("showHeight")[Number(pie3d.showHeight)].checked = true;
+      document.getElementsByName("sliceShowLabel")[Number(pie3d.sliceShowLabel)].checked = true;
+      document.getElementsByName("hoverShowLabel")[Number(pie3d.hoverShowLabel)].checked = true;
+      document.getElementsByName("hoverShowHeight")[Number(pie3d.hoverShowHeight)].checked = true;
+      document.getElementsByName("hoverShowArcPct")[Number(pie3d.hoverShowArcPct)].checked = true;
       document.getElementsByName("labelFontFactor")[0].value = pie3d.labelFontFactor;
       document.getElementsByName("labelExtraTopMargin")[0].value = pie3d.labelExtraTopMargin;
       document.getElementsByName("labelColor")[0].value = pie3d.labelColor;

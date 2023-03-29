@@ -8,6 +8,7 @@
     <meta name="mobile-web-app-capable" content="yes">    
 
     <script src="https://cdn.babylonjs.com/babylon.js"></script>
+    <script src="https://cdn.babylonjs.com/gui/babylon.gui.js"></script>
     <script src="./candy-pie-babylon.js"></script>
 
     <style>
@@ -105,7 +106,7 @@
                 { 'height': 100, 'color': 'olive'}
               ]
             };
-            candy_pie_babylon( pie3d_001);
+            candyPie.babylon( pie3d_001);
           </script>
         </div>
       </div>
@@ -136,7 +137,7 @@
                 'backgroundColor': 'lightgrey'
               };
               
-              candy_pie_babylon( pie3d_002);
+              candyPie.babylon( pie3d_002);
             </script>
     
           </div>
@@ -152,7 +153,6 @@
           <ul>
             <li><i>allowVerticalRotation</i>: default true, here set to false. So now only horizontal rotation is possible.
             <li><i>cameraDegreesY</i>: the camera position is set to 30 degrees, a little lower than the default of 45 degrees. Camera position starts at the ground plane.
-            <li><i>clickScalePct</i>: When clicking on a slice, the slice will grow a certain percentage. Default 0%; so no zooming at all. Click once again to return to the original size.
           </ul>
           
 
@@ -172,11 +172,10 @@
                 'backgroundColor': 'lightgrey',
                 // 3 more options
                 'cameraDegreesY': 30,
-                'allowVerticalRotation': false,
-                'clickScalePct': 20
+                'allowVerticalRotation': false
               };
               
-              candy_pie_babylon( pie3d_003);
+              candyPie.babylon( pie3d_003);
             </script>
     
           </div>
@@ -212,7 +211,7 @@
                 'cameraDegreesY': 30
               };
               
-              candy_pie_babylon( pie3d_4);
+              candyPie.babylon( pie3d_4);
             </script>
     
             <pre>
@@ -236,8 +235,8 @@
         <div class='article'>
           <p>A few options for the labels shown on the slice surface:</p>
           <ul>
-            <li>showLabel: boolean, default false.
-            <li>showHeight: boolean, default false.
+            <li>sliceShowLabel: boolean, default false.
+            <li>hoverShowHeight: boolean, default false.
             <li>labelFontFactor: default 1. In case a greater font is desired, increase here the font factor.
             <li>labelExtraTopMargin: default 0. Increment this figure in case the labels should show up a little lower within each slice.
             <li>labelColor: default empty. If so, the scripts uses black or white labels, depending of the color of the slice. If not, this color is used for all slices.
@@ -261,7 +260,7 @@
             &nbsp; { 'height': 18, 'arcPct': 30, 'label': 'apples'}
             ],
             ..
-            'showLabel': true,
+            'sliceShowLabel': true,
             'labelFontFactor': 1.5,
             
           </pre>
@@ -283,14 +282,13 @@
                 ],
                 'spaceBetweenSlices': true,
                 'innerRadiusPct': 40,
-                'showLabel': true,
+                'sliceShowLabel': true,
                 'labelFontFactor': 1.5,
                 'backgroundColor': window.getComputedStyle( document.getElementById( 'id-pick-color')).backgroundColor,
-                'clickScalePct': 20,
                 'verticalFactor': 1.6 // increment this number in case you want higher vertical slices
               };
               
-              candy_pie_babylon( pie3d);
+              candyPie.babylon( pie3d);
             </script>
 
           </div>
@@ -304,6 +302,9 @@
         <div class='article'>
           <p>This pie chart has also 5 slices, all with same width (arc), but the slices are all made higher than in the previous pie chart. 
             This is done via the <i>verticalFactor</i> configuration option, which stretches the slices vertically.</p>
+          <p>addLegend, well, adds a legend. For each slice with a label a legend item is shown. Clicking on such item moves the slice in front.</p>
+          <p>When clicking on a slice, a hover box pops up. The box contains the label and the height of the slice, as configured by <i>hoverShowLabel</i> &amp; <i>hoverShowHeight</i>.</p>
+          <p>Also possible <i>hoverShowArcPct</i></p>
   
         <div>
           <canvas id='candy-pie-babylon-canvas-id2' class='candy-pie-babylon-canvas' style="width:80%; margin-left: 10%; aspect-ratio: 1/1"></canvas>
@@ -320,20 +321,24 @@
               ],
               'spaceBetweenSlices': true,
               'innerRadiusPct': 40, // use 0 to get rid of the donut hole
-              'showHeight': true,
-              'showLabel': true,
+              'sliceShowLabel': true,
+              'hoverShowLabel': true,
+              'hoverShowHeight': true,
               'labelFontFactor': 1.5,
               'backgroundColor': 'rgb(155, 102, 102)',
-              'clickScalePct': 20,
-              'verticalFactor': 4
+              'verticalFactor': 4,
+              'addLegend': true
             };
             
-            candy_pie_babylon( pie3d2);
+            candyPie.babylon( pie3d2);
           </script>
 
           <pre>
             
-            'verticalFactor': 4
+            'verticalFactor': 4,
+            'addLegend': true,
+            'hoverShowLabel': true,
+            'hoverShowHeight': true,
             
           </pre>
   
@@ -345,18 +350,12 @@
         <div class='header'>holiday pie chart</div>
         <div class='article'>
 
-          <p>with rotation & legend.</p>
+          <p>with rotation.</p>
           <div>
             <canvas id='canvas-007' class='candy-pie-babylon-canvas' style="width:75%; margin-left: 12%; aspect-ratio: 4/3"></canvas>
 
-            <pre>
-            
-              'addLegend': true
-              
-            </pre>
-
             <script>
-              candy_pie_babylon( {
+              candyPie.babylon( {
                 'htmlCanvasId': 'canvas-007',
                 'slices': [
                   { 'height': 1, 'color': 'lightblue', 'label': 'swimming'},
@@ -366,17 +365,15 @@
                 ],
                 'spaceBetweenSlices': true,
                 'innerRadiusPct': 25, // use 0 to get rid of the donut hole
-                'showLabel': true,
+                'sliceShowLabel': true,
                 'labelFontFactor': 2.5,
                 'labelExtraTopMargin': 20,
                 'labelColor': 'rgb(155, 102, 102)',
                 'backgroundColor': 'rgb(196,238,216)', // green-ish
-                'clickScalePct': 0,
                 'verticalFactor': 2,
                 'allowVerticalRotation' : false,
                 'cameraDegreesY': 30,
-                'secondsPerRotation': 5,
-                'addLegend': true
+                'secondsPerRotation': 5
               });
             </script>
 

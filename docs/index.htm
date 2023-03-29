@@ -11,6 +11,7 @@
     
 
     <script src="https://cdn.babylonjs.com/babylon.js"></script>
+    <script src="https://cdn.babylonjs.com/gui/babylon.gui.js"></script>
     <script src="https://thierryvergult.github.io/CandyPie/candy-pie-babylon.js"></script>
 
     <style>
@@ -101,7 +102,7 @@
             <li>candy: don't take it that seriously. Pie charts are not always loved.. One should not use 3d for charts.. Negative times negative equals positive?
             <li>pie: yes indeed, a pie chart. See above.
             <li>configurable: all options are described below. Curious which other options will prove to be interesting later on.
-            <li>interactive: the result is not a static image, but a 3d object one can rotate. Or zoom into a slice.
+            <li>interactive: the result is not a static image, but a 3d object one can rotate. Or click on a slice for more info via a hover effect.
             <li>3d: standing on the shoulders of
               <br> 
               <a href='https://www.babylonjs.com/' target="_blank">
@@ -119,6 +120,7 @@
           <p>Load first the babylon.js code into your page, and add the candy-pie script.</p>
           <pre>
             &lt;script src="https://cdn.babylonjs.com/babylon.js"&gt;&lt;/script&gt;
+            &lt;script src="https://cdn.babylonjs.com/gui/babylon.gui.js"&gt;&lt;/script&gt;
             &lt;script src="https://thierryvergult.github.io/CandyPie/candy-pie-babylon.js"&gt;&lt;/script&gt;
           </pre>
 
@@ -135,7 +137,7 @@
             &nbsp;  ..
             };
             
-            candy_pie_babylon( my_pie3d);
+            candyPie.babylon( my_pie3d);
 
           </pre>
 
@@ -180,7 +182,7 @@
                 ]
               };
               
-              candy_pie_babylon( pie3d_default);
+              candyPie.babylon( pie3d_default);
             </script>
     
             <pre>
@@ -194,7 +196,7 @@
               };
                           
               // call the 3d pie function with the above settings
-              candy_pie_babylon( pie3d_default);
+              candyPie.babylon( pie3d_default);
             </pre>
     
           </div>
@@ -230,7 +232,7 @@
                 backgroundColor: 'lightgrey'
               };
               
-              candy_pie_babylon( pie3d_2);
+              candyPie.babylon( pie3d_2);
             </script>
     
             <pre>
@@ -284,7 +286,7 @@
                 clickScalePct: 20
               };
               
-              candy_pie_babylon( pie3d_3);
+              candyPie.babylon( pie3d_3);
             </script>
     
             <pre>
@@ -328,7 +330,7 @@
                 cameraDegreesY: 30
               };
               
-              candy_pie_babylon( pie3d_4);
+              candyPie.babylon( pie3d_4);
             </script>
     
             <pre>
@@ -406,7 +408,7 @@
                 verticalFactor: 1.6 // increment this number in case you want higher vertical slices
               };
               
-              candy_pie_babylon( pie3d);
+              candyPie.babylon( pie3d);
             </script>
 
           </div>
@@ -446,7 +448,7 @@
               addLegend: true
             };
             
-            candy_pie_babylon( pie3d2);
+            candyPie.babylon( pie3d2);
           </script>
 
           <pre>
@@ -473,7 +475,7 @@
             <canvas id='candy-pie-babylon-canvas-id3' class='candy-pie-babylon-canvas' style="width:75%; margin-left: 12%; aspect-ratio: 4/3"></canvas>
 
             <script>
-              candy_pie_babylon( {
+              candyPie.babylon( {
                 htmlCanvasId: 'candy-pie-babylon-canvas-id3',
                 slices: [
                   { height: 1, color: 'lightblue', label: 'swimming'},
