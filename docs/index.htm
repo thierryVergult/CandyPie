@@ -262,7 +262,6 @@
             <ul>
               <li><i>allowVerticalRotation</i>: default true, here set to false. So now only horizontal rotation is possible.
               <li><i>cameraDegreesY</i>: the camera position is set to 30 degrees, a little lower than the default of 45 degrees. Camera position starts at the ground plane.
-              <li><i>clickScalePct</i>: When clicking on a slice, the slice will grow a certain percentage. Default 0%; so no zooming at all. Click once again to return to the original size.
             </ul>
           </p>
 
@@ -282,8 +281,7 @@
                 backgroundColor: 'lightgrey',
                 // 3 more options
                 cameraDegreesY: 30,
-                allowVerticalRotation: false,
-                clickScalePct: 20
+                allowVerticalRotation: false
               };
               
               candyPie.babylon( pie3d_3);
@@ -292,8 +290,7 @@
             <pre>
               
               &nbsp; cameraDegreesY: 30,
-              &nbsp; allowVerticalRotation: false,
-              &nbsp; clickScalePct: 20
+              &nbsp; allowVerticalRotation: false
               
             </pre>
     
@@ -354,8 +351,7 @@
         <div class='article'>
           <p>A few options for the labels shown on the slice surface:</p>
           <ul>
-            <li>showLabel: boolean, default false.
-            <li>showHeight: boolean, default false.
+            <li>sliceShowLabel: boolean, default false.
             <li>labelFontFactor: default 1. In case a greater font is desired, increase here the font factor.
             <li>labelExtraTopMargin: default 0. Increment this figure in case the labels should show up a little lower within each slice.
             <li>labelColor: default empty. If so, the scripts uses black or white labels, depending of the color of the slice. If not, this color is used for all slices.
@@ -364,8 +360,21 @@
       </div>
 
 
+      <div class='card' id='hover-id'>
+        <div class='header'>hover</div>
+        <div class='article'>
+          <p>More info about a slice can be seen when clicking on a slice. That pops up a hover box, which will contain details in line with the configuration set:</p>
+          <ul>
+            <li>hoverShowLabel:  boolean, default false. Adds the slice label to the hover box, when set.
+            <li>hoverShowHeight: boolean, default false. Adds the slice's height to the hover box, when set.
+            <li>hoverShowArcPct: boolean, default false. Adds the slice's arc percentage to the hover box, when set.
+          </ul>
+        </div>
+      </div>
+
+
       <div class='card' id='all-in'>
-        <div class='header'>Variable pie chart with labels</div>
+        <div class='header'>Variable pie chart with labels &amp; hover.</div>
         <div class='article'>
                    
           <p>Here a pie chart with 5 slices and labels. The slices have a variable height and a variable arc : slice 4 is smaller, applepie is larger than the others.</p>
@@ -379,8 +388,11 @@
             &nbsp; { height: 18, arcPct: 30, label: 'apples'}
             ],
             ..
-            showLabel: true,
+            sliceShowLabel: true,
             labelFontFactor: 1.5,
+            hoverShowLabel: true,
+            hoverShowHeight: true,
+            hoverShowArcPct: true,
             
           </pre>
           
@@ -401,10 +413,12 @@
                 ],
                 spaceBetweenSlices: true,
                 innerRadiusPct: 40,
-                showLabel: true,
+                sliceShowLabel: true,
+                hoverShowLabel: true,
+                hoverShowHeight: true,
+                hoverShowArcPct: true,
                 labelFontFactor: 1.5,
                 backgroundColor: window.getComputedStyle( document.getElementById( 'id-pick-color')).backgroundColor,
-                clickScalePct: 20,
                 verticalFactor: 1.6 // increment this number in case you want higher vertical slices
               };
               
@@ -440,10 +454,9 @@
               spaceBetweenSlices: true,
               innerRadiusPct: 40, // use 0 to get rid of the donut hole
               showHeight: true,
-              showLabel: true,
+              sliceShowLabel: true,
               labelFontFactor: 1.5,
               backgroundColor: 'rgb(155, 102, 102)',
-              clickScalePct: 20,
               verticalFactor: 4,
               addLegend: true
             };
@@ -485,12 +498,12 @@
                 ],
                 spaceBetweenSlices: true,
                 innerRadiusPct: 25, // use 0 to get rid of the donut hole
-                showLabel: true,
+                sliceShowLabel: true,
+                hoverShowLabel: true,
                 labelFontFactor: 2.5,
                 labelExtraTopMargin: 20,
                 labelColor: 'rgb(155, 102, 102)',
                 backgroundColor: 'rgb(196,238,216)', // green-ish
-                clickScalePct: 0,
                 verticalFactor: 2,
                 allowVerticalRotation : false,
                 cameraDegreesY: 30,
@@ -505,7 +518,6 @@
               labelExtraTopMargin: 20,
               labelColor: 'rgb(155, 102, 102)',
               backgroundColor: 'rgb(196,238,216)', // green-ish
-              clickScalePct: 0,
               verticalFactor: 2,
               allowVerticalRotation : false,
               cameraDegreesY: 60,
