@@ -1,3 +1,4 @@
+//#region hi
 /*
     Candy pie
     - short: a 3d pie chart, on top of babylon.js
@@ -40,6 +41,7 @@
       ]
     
 */
+//#endregion hi
 
 candyPie = {};
 
@@ -93,6 +95,18 @@ candyPie.angleBetween3Points = function(p0,p1,p2) {
   var radians = Math.acos( (a+b-c) / Math.sqrt(4*a*b));
   // console.log( 'angleBetween3Points', radians, 'degrees', ( radians * (180 / Math.PI)).toFixed(2))
   return radians;
+}
+
+
+candyPie.rad2degrees = function(radians, cleanUp) {
+  let degrees = radians / (2*Math.PI) * 360;
+  degrees = cleanUp ? Math.trunc(degrees) + '°' : degrees;
+  return degrees;
+}
+
+
+candyPie.degrees2rad = function(degrees) {
+  return degrees / 180 * Math.PI;
 }
 
 
@@ -345,7 +359,7 @@ candyPie.pieChart = function(pie3d) {
       donut.position.z = - Math.sin( rotY + halfArcSlice) * middleRadius;
     }
       
-    candyPie.addHover( {"pie3d": pie3d, "mesh": donut, "label": textOnSlice, "height": realHeight, "arcPct": arcFraction, "color": color});
+    candyPie.addHover( {"pie3d": pie3d, "mesh": donut, "label": label, "height": realHeight, "arcPct": arcFraction, "color": color});
 
     if ( pie3d.secondsPerRotation > 0 ) {
       pie3d.scene.registerAfterRender( function () {
@@ -396,6 +410,41 @@ candyPie.pieChart = function(pie3d) {
         
   }
 }
+
+
+candyPie.angularFieldOfView = function(pie3d, cameraRadius) {
+  //
+  // set angle (field of view) of camera to fill the canvas as good as possible
+  // take the angle (in 2d) between origin (0,0), the camera position and some points ( variations of diameter/2, verticalfactor/2)
+  // take the max of these radians, and multiply by 2 to obtain the final Angular Field Of View.
+  // the choice of the points is the secret sauce
+  //
+  let halfDia = pie3d.diameter/2,
+      halfVert = pie3d.verticalFactor/2;
+  
+  const pZero = { 'x': 0, 'y': 0 },
+        angleRad = candyPie.degrees2rad( pie3d.cameraDegreesY),
+        pCamera = { 'x': cameraRadius * Math.cos(angleRad), 'y': cameraRadius * Math.sin(angleRad)};
+
+  const fov1 = candyPie.angleBetween3Points( pZero, pCamera, {'x': -halfDia,'y':  halfVert}),
+        fov2 = candyPie.angleBetween3Points( pZero, pCamera, {'x':  halfDia,'y': -halfVert}),
+        fov3 = candyPie.angleBetween3Points( pZero, pCamera, {'x':  halfDia,'y':  halfVert}),
+        fov4 = candyPie.angleBetween3Points( pZero, pCamera, {'x':        0,'y':  pie3d.allowVerticalRotation? halfDia : 0}),
+        fovMax = Math.max( fov1, fov2, fov3, fov4),
+        fovFinal = fovMax * pie3d.cameraFovFactor;
+  
+  console.log( 'fovvv',
+    candyPie.rad2degrees( fov1, true),
+    candyPie.rad2degrees( fov2, true),
+    candyPie.rad2degrees( fov3, true),
+    candyPie.rad2degrees( fov4, true),
+    'max', candyPie.rad2degrees( fovMax, true),
+    'factor', candyPie.rad2degrees( fovFinal, true),
+    'final', fovFinal
+  );
+  
+  return fovFinal;
+}
   
 candyPie.createPieChartScene = function ( pie3d) {
 
@@ -412,29 +461,16 @@ candyPie.createPieChartScene = function ( pie3d) {
   camera.upperRadiusLimit = cameraRadius;
     
   camera.alpha = -Math.PI / 2; // - PI/2 : on negative Z
-  const angleRad = Math.PI / 180 * pie3d.cameraDegreesY;
+  const angleRad = candyPie.degrees2rad( pie3d.cameraDegreesY);
   camera.beta = Math.PI/2 - angleRad; // normally from top (Y) towards ZX-plane. Now vice versa, the camera goes up Y degrees
     
   // limit Beta rotation between 0 and 90 degrees, when allowVerticalRotation is on.
   const cameraRadiansY = Math.PI/2 - BABYLON.Angle.FromDegrees(pie3d.cameraDegreesY).radians();
   camera.lowerBetaLimit = ( pie3d.allowVerticalRotation ? BABYLON.Angle.FromDegrees( 0).radians() : cameraRadiansY);
   camera.upperBetaLimit = ( pie3d.allowVerticalRotation ? BABYLON.Angle.FromDegrees(90).radians() : cameraRadiansY);
-    
-  //
+  
   // set angle (field of view) of camera to fill the canvas as good as possible
-  // simply take the angle (in 2d) between origin (0,0), the camera position and the highest / farest point on the pie ( diameter/2, verticalfactor/2)
-  // and the angle for origin, camera position and the lowest, nearest point
-  // take the max of both radians, et voila, we have a good Fov.
-  //
-  const p0 = { 'x': 0, 'y': 0 };
-  const p1 = { 'x': - cameraRadius * Math.sin(angleRad), 'y': cameraRadius * Math.cos(angleRad) };
-  const p2_up = { 'x': pie3d.diameter / 2, 'y': pie3d.verticalFactor / 2};
-  const a_up = candyPie.angleBetween3Points( p0, p1, p2_up);
-
-  const p2_down = { 'x': - pie3d.diameter / 2, 'y': -pie3d.verticalFactor / 2};
-  const a_down = candyPie.angleBetween3Points( p0, p1, p2_down);
-    
-  camera.fov = Math.max( a_up, a_down) * pie3d.cameraFovFactor;
+  camera.fov = candyPie.angularFieldOfView(pie3d, cameraRadius);
         
   // This creates a light, aiming 0,1,0 - to the sky (non-mesh)
   const light1 = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3( cameraRadius, cameraRadius * 2, cameraRadius * 1.2));
