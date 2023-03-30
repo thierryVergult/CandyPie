@@ -96,22 +96,45 @@ candyPie.angleBetween3Points = function(p0,p1,p2) {
 }
 
 
-candyPie.addHover = function( {pie3d, mesh, label, height, arcPct, color}) {
+candyPie.initHover = function(pie3d) {
   
   if (!BABYLON.GUI) {
     let msg = 'Babylon gui library not present. Hover not possible.';
     console.log(msg);
     return msg;
   }
+
+  // set pie3d.gui once for all hovers on meshes.
+  // must be overwritten/reset when drawing the pie again  (like in the playground)
+  pie3d.gui = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
+
+  // stores the click state (boolean) for each mesh (mesh-id is the key in the hash map)
+  pie3d.hoverState = [];
+}
+
+
+candyPie.addHover = function( {pie3d, mesh, label, height, arcPct, color}) {
   
-  if ( !pie3d.hoverShowLabel && !pie3d.hoverShowHeight && !pie3d.hoverShowArcPct) {
-    return;
+  if (!pie3d.gui) {
+    return 'pie3d.gui is not set during init. run.';
   }
   
-  let hoverTxt = '';
-  hoverTxt += pie3d.hoverShowLabel ? label : '';
-  hoverTxt += pie3d.hoverShowHeight ? '\n ' + height : '';
-  hoverTxt += pie3d.hoverShowArcPct ? '\n ' + (arcPct*100) + '%' : '';
+  if ( pie3d.hoverShowLabel + pie3d.hoverShowHeight + pie3d.hoverShowArcPct == 0) {
+    return 'no hover settings active. ciao.';
+  }
+
+  function addHoverText( condition, text) {
+    if (condition && text) {
+      hoverTexts.push(text)
+    }
+  }
+  
+  let hoverTexts = [];
+  addHoverText( pie3d.hoverShowLabel,  label);
+  addHoverText( pie3d.hoverShowHeight, height);
+  addHoverText( pie3d.hoverShowArcPct, (arcPct*100) + '%');
+  
+  let hoverTxt = hoverTexts.join('\n');
 
   let button = BABYLON.GUI.Button.CreateSimpleButton( mesh.id + '-hover', hoverTxt);
   button.width = (label.length > 12 ? 250 : 150 ) + "px";
@@ -123,38 +146,80 @@ candyPie.addHover = function( {pie3d, mesh, label, height, arcPct, color}) {
   
   button.cornerRadius = 20;
   button.thickness = 4;
-  button.scaleX = 0; // wil be changed via animations
-  button.scaleY = 0; // wil be changed via animations
+
+  button.scaleX = 0;    // wil be changed via animations
+  button.scaleY = 0;    // wil be changed via animations
+  button.rotation = 0;  // wil be changed via animations
   
-  // default true for a button, set it to false for mobile, so we can the place to touch again on the hover box to get it dissapear
+  // default true for a button, set it to false for mobile, so we can touch the hover box to get it disappear
   button.isPointerBlocker = false;
   
   pie3d.gui.addControl(button);
 
   button.linkWithMesh(mesh);
 
-  button.rotation = 0; //Math.PI / 16;
-
-  // add 2 animations to the mesh
+  // add 3 animations to the mesh
   let actionManager = new BABYLON.ActionManager(pie3d.scene);
 
   mesh.actionManager = actionManager;
 
-  let keys = [
-    { frame:  0, value: 0}, 
-    { frame: 10, value: 1}
-  ];
-
   let scaleXAnimation = new BABYLON.Animation("hoverX", "scaleX",   30, BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
   let scaleYAnimation = new BABYLON.Animation("hoverY", "scaleY",   30, BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
   let scaleRotation   = new BABYLON.Animation("hoverR", "rotation", 30, BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
-
-  scaleXAnimation.setKeys(keys);
-  scaleYAnimation.setKeys(keys);
+  
+  let keysOnOff = [
+    { frame:  0, value: 0}, 
+    { frame: 10, value: 1}
+  ];
+  scaleXAnimation.setKeys(keysOnOff);
+  scaleYAnimation.setKeys(keysOnOff);
 
   pie3d.rotationAnimationKeys = [
     { frame:  0, value: 0},
-    { frame: 10, value: (mesh.id.slice(-1)%3-1) * 0.1}
+    /*
+      add some variation to the target value for rotation
+      last digit of the slice-id, module 3, minus 1, so iterating through -1, 0, 1
+      and then rotate 15° ( multiply by PI / 12)
+
+      == obsolete = memories =
+      Tried to have the rotation orthogonal on the position of the slice, but was rather complicated for little effect
+      since the text can only rotate a little to keep it readible and not stretch your neck too much.
+      Came up with an algo to rotate driven by quadrant
+
+      in the onPickTrigger function
+
+      get position from internal variables to find the middle of the box
+        canvas = H x W
+        gui box = h x w, positioned within the canvas via left & top
+
+        horizontal middle = left + w/2
+        vertical middle   = top  + h/2
+
+        xPct, yPct : handle them as percentages, and bring them to the middle of the canvas, and invert the Y ax
+
+        => q(uadrant) & rot(ation)
+
+        move that rotation to the target value of the rotation keys, and reset the keys
+
+
+          let H = button._cachedParentMeasure.height,
+                  W = button._cachedParentMeasure.width,
+                  h = button._currentMeasure.height,
+                  w = button._currentMeasure.width,
+                  t = button._currentMeasure.top,
+                  l = button._currentMeasure.left,
+                  xPct =  2* (Math.trunc(( l + w/2)/W * 100) - 50),
+                  yPct = -2* ( Math.trunc(( t + h/2)/H * 100) - 50),
+                  q = xPct > 0 ? yPct > 0 ? 1 : 4 : yPct > 0 ? 2 : 3,
+                  rot = (xPct > 0 ? yPct > 0 ? 1 : -1 : yPct > 0 ? -1 : 1) * 0.33;
+              
+              pie3d.rotationAnimationKeys[1].value = rot;
+              scaleRotation.setKeys( pie3d.rotationAnimationKeys);
+
+
+    */
+
+    { frame: 10, value: (mesh.id.slice(-1)%3-1) * Math.PI / 12}
   ];
   scaleRotation.setKeys( pie3d.rotationAnimationKeys);
 
@@ -164,32 +229,25 @@ candyPie.addHover = function( {pie3d, mesh, label, height, arcPct, color}) {
     new BABYLON.ExecuteCodeAction(
       BABYLON.ActionManager.OnPickTrigger, 
       function(ev){
+
         if ( ! pie3d.hoverState[mesh.id]) {
-          //console.log( 'click', button.linkedMesh.name, 'y', button.linkedMesh.rotation.y, button, button.left, button.top);
-          console.log( 'click', button.name,
-            'H', button._cachedParentMeasure.height, 
-            'h', button._currentMeasure.height + button._currentMeasure.top,
-            'h%', Math.trunc((button._currentMeasure.height + button._currentMeasure.top)/button._cachedParentMeasure.height * 100) - 50, ''
-            //'W', button._cachedParentMeasure.width,
-            //'w', button._currentMeasure.width + button._currentMeasure.left
-            );
-          pie3d.scene.beginAnimation(button, 0, 10, false);
+          pie3d.scene.beginAnimation(button, 0, 10, false);  //Begin animation - object to animate, first frame, last frame and loop if true
           pie3d.hoverState[mesh.id] = true;
 
         } else if ( pie3d.hoverState[mesh.id]) {
-          pie3d.scene.beginAnimation(button, 10, 0, false);
+          pie3d.scene.beginAnimation(button, 10, 0, false); // inverse frames
           pie3d.hoverState[mesh.id] = false;
-
         }
       }));
   
-  //if hover is over remove highlight of the mesh
+  //if hover is over (on pointer out ) : remove highlight of the mesh
   actionManager.registerAction(
     new BABYLON.ExecuteCodeAction(
       BABYLON.ActionManager.OnPointerOutTrigger, 
       function(ev){
+
         if ( pie3d.hoverState[mesh.id]) {
-          pie3d.scene.beginAnimation(button, 10, 0, false);
+          pie3d.scene.beginAnimation(button, 10, 0, false);  // inverse frames again, cf 2nd click.
           pie3d.hoverState[mesh.id] = false;
         }
       }));
@@ -317,10 +375,9 @@ candyPie.pieChart = function(pie3d) {
   // so it is shown right into the face, and not starting at the right (at the X ax, negatif Z)
   let rotY = Math.PI/2 - 2 * Math.PI * slices[0].arcPct / 100 / 2;
   let sliceNr = 0;
-  
-  pie3d.gui = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
-  pie3d.hoverState = [];
 
+  candyPie.initHover(pie3d);
+  
   for ( let i = 0; i < slices.length; i++) {
     
     let p = slices[i],
@@ -457,7 +514,7 @@ candyPie.add_legend = function( pie3d) {
   const legendDiv = document.createElement("div");
   pie3d.legendDiv = legendDiv;
 
-  cntLegendItems = 0;
+  let cntLegendItems = 0;
   
   if (pie3d.addLegend) {
 
@@ -533,10 +590,9 @@ candyPie.add_legend = function( pie3d) {
         legendDiv.appendChild(legendItem);
         legendItem.appendChild(circleItem);
         legendItem.appendChild(textItem);
-
-        cntLegendItems += cntLegendItems;
+        
+        cntLegendItems += 1;
       }
-      
     }
 
     if (cntLegendItems == 0) {
