@@ -176,6 +176,7 @@ candyPie.addHover = function( {pie3d, mesh, label, height, arcPct, color}) {
 
   pie3d.rotationAnimationKeys = [
     { frame:  0, value: 0},
+    //#region rotationKeyEndValueStory
     /*
       add some variation to the target value for rotation
       last digit of the slice-id, module 3, minus 1, so iterating through -1, 0, 1
@@ -216,9 +217,8 @@ candyPie.addHover = function( {pie3d, mesh, label, height, arcPct, color}) {
               pie3d.rotationAnimationKeys[1].value = rot;
               scaleRotation.setKeys( pie3d.rotationAnimationKeys);
 
-
     */
-
+    //#endregion
     { frame: 10, value: (mesh.id.slice(-1)%3-1) * Math.PI / 12}
   ];
   scaleRotation.setKeys( pie3d.rotationAnimationKeys);
