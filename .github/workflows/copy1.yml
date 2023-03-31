@@ -11,7 +11,7 @@ jobs:
         with:
           path: './docs/'
 
-      - run: cp "./candy-pie-babylon.js" "./docs/candy-pie-babylon.js"
+      - run: cp "candy-pie-babylon.js" "docs/candy-pie-babylon.js"
 
       - uses: EndBug/add-and-commit@v9
         with:
