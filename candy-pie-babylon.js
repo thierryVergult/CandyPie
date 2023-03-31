@@ -1,4 +1,4 @@
-//#region intro
+//#region intro_candy
 /*
     Candy pie
     - short: a 3d pie chart, on top of babylon.js
