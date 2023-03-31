@@ -17,6 +17,6 @@ jobs:
 
       - uses: EndBug/add-and-commit@v9
         with:
-          message: 'Add the very useful text file'
+          message: 'force commit js files into /docs'
           add: '*.js --force'
           cwd: './docs/'
