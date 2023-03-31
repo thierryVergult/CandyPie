@@ -9,14 +9,26 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: copy file
+      - name: copy js
         uses: canastro/copy-file-action@master
         with:
           source: "candy-pie-babylon.js"
           target: "docs/candy-pie-babylon.js"
-
+      
+      - name: copy index html
+        uses: canastro/copy-file-action@master
+        with:
+          source: "docs_index.htm"
+          target: "docs/index.htm"
+          
+      - name: copy playground html
+        uses: canastro/copy-file-action@master
+        with:
+          source: "playground.htm"
+          target: "docs/playground.htm"
+      
       - uses: EndBug/add-and-commit@v9
         with:
-          message: 'force commit js files into /docs'
-          add: '*.js --force'
+          message: 'force commit files into /docs'
+          add: '*.* --force'
           cwd: './docs/'
