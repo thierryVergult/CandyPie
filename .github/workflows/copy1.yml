@@ -8,10 +8,12 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-        with:
-          path: './docs/'
 
-      - run: echo "123" > ./docs/file.js
+      - name: copy file
+        uses: canastro/copy-file-action@master
+        with:
+          source: "candy-pie-babylon.js"
+          target: "docs/candy-pie-babylon.js"
 
       - uses: EndBug/add-and-commit@v9
         with:
