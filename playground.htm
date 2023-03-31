@@ -1,0 +1,283 @@
+<!doctype html>
+  <html lang=en>
+  <head>
+    <meta charset=utf-8>
+    <meta name="viewport" content="width=device-width">
+    <meta name="mobile-web-app-capable" content="yes">
+
+    <title>candy pie playgrond</title>
+
+    <style>
+      body {
+        padding-left: 10px;
+        color: steelblue;
+        max-width: 600px;
+        margin: auto;
+        border: 1px solid lightgrey;
+      }
+
+      .configOption {
+        display: inline-block;
+        width: 50%;
+        margin: 8px;
+      }
+
+      input[type="number"] {
+        width: 15%;
+      }
+
+      .candy-pie-babylon-canvas {
+        touch-action: none;
+        outline: none;
+        width: 80%;
+        margin-left: 10%;
+        margin-bottom: 30px;
+      }
+
+      .btn {
+        width: 80%;
+        margin-left: 10%;
+        background-color: lightblue;
+        padding-top: 20px;
+        padding-bottom: 20px;
+        margin-bottom: 25px;
+        border: none;
+        box-shadow: 3px 7px steelblue;
+        font-weight: bold;
+        font-size: 24px;
+        color: steelblue;
+      }
+
+      .btn-plus {
+        margin-left: 10%;
+        padding-top: 10px;
+        padding-bottom: 10px;
+        margin-bottom: 10px;
+      }
+
+      #slices-id {
+        margin: 20px;
+      }
+    </style>
+
+    <script src="https://cdn.babylonjs.com/babylon.js"></script>
+    <script src="https://cdn.babylonjs.com/gui/babylon.gui.js"></script>
+    <script src="./candy-pie-babylon.js"></script>
+
+    <link href="https://unpkg.com/tabulator-tables/dist/css/tabulator.min.css" rel="stylesheet">
+    <script type="text/javascript" src="https://unpkg.com/tabulator-tables/dist/js/tabulator.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/mdbassit/Coloris@latest/dist/coloris.min.css"/>
+    <script src="https://cdn.jsdelivr.net/gh/mdbassit/Coloris@latest/dist/coloris.min.js"></script>
+
+  </head>
+  
+  <body>
+
+    <h2>candy pie playground</h2>
+
+    <h3>candy pie</h3>
+
+      <h4 style="margin: 5%;">a configurable, interactive 3d pie chart in your browser</h4>
+
+      <ul style="margin: 5%;">
+        <li>open source repository on <a href="https://github.com/thierryVergult/CandyPie" target="_blank">github</a></li>
+        <li><a href="https://thierryvergult.github.io/CandyPie/" target="_blank">for more examples &amp; details</a></li>
+      </ul>
+
+    <h3>data for the slices</h3>
+
+      <p style="margin: 5%;">You can modify all data in the table below. Each row corresponds with a slice of the candy pie.</p>
+
+      <div id="slices-id"></div>
+      
+      <button onclick="table.addRow( { color: 'lightblue'}, false);" class="btn-plus">Add row</button>
+
+      <ul  style="margin: 5%">
+        <li>Set <i>height</i> or <i>ArcPct</i> to zero or empty the cell to remove a slice from the candy pie</li>
+        <li><a href="http://tabulator.info/" target="_blank">tabulator</a> used for the interactive table above</li>
+        <li><a href="https://github.com/mdbassit/Coloris" target="_blank">coloris</a> used as color picker</li>
+      </ul>
+
+    <h3>candy pie</h3>
+    <canvas id='canvas-id' class='candy-pie-babylon-canvas'></canvas>
+
+    <button onclick="pie3d.slices = table.getData(); candyPie.babylon( pie3d);" class="btn">Update Candy Pie</button>
+
+    <h3>configuration</h3>
+
+    <p class="configOption">innerRadiusPct</p>
+      <input type="number" name="innerRadiusPct"  min="0" max="99" onchange="pie3d[this.name] = this.value;">
+      <span>%</span>
+      <br>
+
+    <p class="configOption">spaceBetweenSlices</p>
+      <label>false</label><input type="radio" name="spaceBetweenSlices" value="0" onchange="pie3d[this.name] = Boolean( Number(this.value));">
+      <label>true </label><input type="radio" name="spaceBetweenSlices" value="1" onchange="pie3d[this.name] = Boolean( Number(this.value));">
+      <br>
+
+    <p class="configOption">backgroundColor</p>
+      <input type="color" name="backgroundColor" value="#e66465" onchange="pie3d[this.name] = this.value;">
+      <br>
+
+    <p class="configOption">secondsPerRotation</p>
+      <input type="number" name="secondsPerRotation" min="0" max="100" onchange="pie3d[this.name] = this.value;">
+      <span>s</span>
+      <br>
+
+    <p class="configOption">rotationSlowDown</p>
+      <label>false</label><input type="radio" name="rotationSlowDown" value="0" onchange="pie3d[this.name] = Boolean( Number(this.value));">
+      <label>true </label><input type="radio" name="rotationSlowDown" value="1" onchange="pie3d[this.name] = Boolean( Number(this.value));">
+      <br>
+    
+    <p class="configOption">allowVerticalRotation</p>
+      <label>false</label><input type="radio" name="allowVerticalRotation" value="0" onchange="pie3d[this.name] = Boolean( Number(this.value));">
+      <label>true </label><input type="radio" name="allowVerticalRotation" value="1" onchange="pie3d[this.name] = Boolean( Number(this.value));">
+      <br>
+
+    <p class="configOption">cameraDegreesY</p>
+      <input type="number" name="cameraDegreesY"  min="0" max="90" onchange="pie3d[this.name] = this.value;">
+      <span>&deg;</span>
+      <ul>
+        <li>0 &deg; : you see a rectangle, looking at the front surface of the slices
+        <li>90 &deg; : you see the pie chart from above, the pie becomes a circle
+      </ul>
+    
+    <p class="configOption">verticalFactor</p>
+      <input type="number" name="verticalFactor"  min="1" max="10" onchange="pie3d[this.name] = this.value;">
+      <br>
+      <br><br>
+
+    <button onclick="pie3d.slices = table.getData(); candyPie.babylon( pie3d);" class="btn">Update Candy Pie</button>
+
+    <h3>labels</h3>
+
+    <p class="configOption">sliceShowLabel</p>
+      <label>false</label><input type="radio" name="sliceShowLabel" value="0" onchange="pie3d[this.name] = Boolean( Number(this.value));">
+      <label>true </label><input type="radio" name="sliceShowLabel" value="1" onchange="pie3d[this.name] = Boolean( Number(this.value));">
+      <br>
+
+    <p class="configOption">labelFontFactor</p>
+      <input type="number" name="labelFontFactor"  min="1" max="5" onchange="pie3d[this.name] = this.value;">  
+      <br>
+    
+    <p class="configOption">labelColor</p>
+      <input type="color" name="labelColor" onchange="pie3d[this.name] = this.value;">
+      <br>
+      <p style="margin-left: 10%; margin-right: 10%;">By default, black or white is chosen per slice, for the best contrast against the color of the slice. A yellow slice will have a black label, a blue slice a white label.</p>
+      <p style="margin-left: 10%; margin-right: 10%;">Setting the label color here is for all slices.</p>
+
+    <p class="configOption">labelExtraTopMargin</p>
+      <input type="number" name="labelExtraTopMargin"  min="1" max="50" onchange="pie3d[this.name] = this.value;">  
+      <br>
+
+    <p class="configOption">hoverShowLabel</p>
+      <label>false</label><input type="radio" name="hoverShowLabel" value="0" onchange="pie3d[this.name] = Boolean( Number(this.value));">
+      <label>true </label><input type="radio" name="hoverShowLabel" value="1" onchange="pie3d[this.name] = Boolean( Number(this.value));">
+      <br>
+
+    <p class="configOption">hoverShowHeight</p>
+      <label>false</label><input type="radio" name="hoverShowHeight" value="0" onchange="pie3d[this.name] = Boolean( Number(this.value));">
+      <label>true </label><input type="radio" name="hoverShowHeight" value="1" onchange="pie3d[this.name] = Boolean( Number(this.value));">
+      <br>
+    
+    <p class="configOption">hoverShowArcPct</p>
+      <label>false</label><input type="radio" name="hoverShowArcPct" value="0" onchange="pie3d[this.name] = Boolean( Number(this.value));">
+      <label>true </label><input type="radio" name="hoverShowArcPct" value="1" onchange="pie3d[this.name] = Boolean( Number(this.value));">
+      <br>
+
+    <p class="configOption">addLegend</p>
+      <label>false</label><input type="radio" name="addLegend" value="0" onchange="pie3d[this.name] = Boolean( Number(this.value));">
+      <label>true </label><input type="radio" name="addLegend" value="1" onchange="pie3d[this.name] = Boolean( Number(this.value));">
+      <br>
+
+    <script>
+      let pie3d = {
+        htmlCanvasId: 'canvas-id',
+        slices: [
+          { height: 100, color: 'indianred'},
+          { height: 100, color: 'steelblue'},
+          { height: 100, color: 'olive'}
+        ],
+        spaceBetweenSlices: false,
+        innerRadiusPct: 40,
+        backgroundColor: '#d3d3d3',
+        secondsPerRotation: 3,
+        showLabel: true
+      };
+              
+      candyPie.babylon( pie3d);
+
+      // push the pie3d (default) values to the html - configuration elements.
+      
+      // ps: for a boolean, convert the boolean value to Number (0/1) and use that as the index to set the first or second element to checked
+      document.getElementsByName("spaceBetweenSlices")[Number(pie3d.spaceBetweenSlices)].checked = true;
+      document.getElementsByName("innerRadiusPct")[0].value = pie3d.innerRadiusPct;
+      document.getElementsByName("backgroundColor")[0].value = pie3d.backgroundColor;
+      document.getElementsByName("secondsPerRotation")[0].value = pie3d.secondsPerRotation;
+      document.getElementsByName("rotationSlowDown")[Number(pie3d.rotationSlowDown)].checked = true;
+      document.getElementsByName("allowVerticalRotation")[Number(pie3d.allowVerticalRotation)].checked = true;
+      document.getElementsByName("verticalFactor")[0].value = pie3d.verticalFactor;
+      document.getElementsByName("cameraDegreesY")[0].value = pie3d.cameraDegreesY;
+
+      document.getElementsByName("sliceShowLabel")[Number(pie3d.sliceShowLabel)].checked = true;
+      document.getElementsByName("hoverShowLabel")[Number(pie3d.hoverShowLabel)].checked = true;
+      document.getElementsByName("hoverShowHeight")[Number(pie3d.hoverShowHeight)].checked = true;
+      document.getElementsByName("hoverShowArcPct")[Number(pie3d.hoverShowArcPct)].checked = true;
+      document.getElementsByName("labelFontFactor")[0].value = pie3d.labelFontFactor;
+      document.getElementsByName("labelExtraTopMargin")[0].value = pie3d.labelExtraTopMargin;
+      document.getElementsByName("labelColor")[0].value = pie3d.labelColor;
+      document.getElementsByName("addLegend")[Number(pie3d.addLegend)].checked = true;
+
+      var colorEditor = function( cell, onRendered, success, cancel, editorParams) {
+
+        //cell - the cell component for the editable cell
+        //onRendered - function to call when the editor has been rendered
+        //success - function to call to pass thesuccessfully updated value to Tabulator
+        //cancel - function to call to abort the edit and return to a normal cell
+        //editorParams - params object passed into the editorParams column definition property
+
+        console.log('coloris edit, in cell with value', cell.getValue());
+
+        //create and style editor
+        var editor = document.createElement("input");
+        editor.dataset.coloris = '';
+        editor.value = cell.getValue();
+        editor.readOnly = true;
+
+        onRendered(function(){
+          editor.click();
+        });
+
+        //when the value has been set, trigger the cell to update
+        function successFunc(){
+          console.log('color edit, success with value ' + editor.value);
+          success( editor.value);
+        }
+
+        editor.addEventListener("change", successFunc);
+        editor.addEventListener("blur", successFunc);
+
+        return editor;
+        
+      };
+
+      Coloris( {
+        alpha: false,
+        focusInput: false
+      })
+
+      var table = new Tabulator("#slices-id", {
+        data: pie3d.slices,
+        layout: "fitColumns",
+        columns:[
+          { title: "height", field: "height", headerSort: false, resizable: false, editor: "number", headerHozAlign: "right", hozAlign: "right"},
+          { title: "color",  field: "color" , headerSort: false, resizable: false, editor: colorEditor, headerHozAlign: "left", formatter: "color"},
+          { title: "arcPct", field: "arcPct", headerSort: false, resizable: false, editor: "number", headerHozAlign: "right", hozAlign: "right", editorParams: { min: 0, max: 100 }},
+          { title: "label",  field: "label",  headerSort: false, resizable: false, editor: true, headerHozAlign: "left"}
+        ]
+      });
+
+    </script>
+  </body>
+</html>
