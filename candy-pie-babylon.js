@@ -417,7 +417,7 @@ candyPie.angularFieldOfView = function(pie3d, cameraRadius, addDiaPoint = true, 
   // find angle (field of view) of camera to fill the canvas as good as possible
   // take the angle (in 2d) between origin (0,0), the camera position and some points ( variations of diameter/2, verticalfactor/2)
   // take the max of these radians, and multiply by 2 to obtain the final Angular Field Of View.
-  // the choice of the points is pictured here : https://www.geogebra.org/geometry/muyypzev
+  // the choice of the points is pictured here : https://www.geogebra.org/geometry/wqmpzc7n
   //
   let halfDia = pie3d.diameter/2,
       halfVert = pie3d.verticalFactor/2;
