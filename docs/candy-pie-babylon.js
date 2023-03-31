@@ -412,12 +412,12 @@ candyPie.pieChart = function(pie3d) {
 }
 
 
-candyPie.angularFieldOfView = function(pie3d, cameraRadius) {
+candyPie.angularFieldOfView = function(pie3d, cameraRadius, addDiaPoint = true, logging = false) {
   //
-  // set angle (field of view) of camera to fill the canvas as good as possible
+  // find angle (field of view) of camera to fill the canvas as good as possible
   // take the angle (in 2d) between origin (0,0), the camera position and some points ( variations of diameter/2, verticalfactor/2)
   // take the max of these radians, and multiply by 2 to obtain the final Angular Field Of View.
-  // the choice of the points is the secret sauce
+  // the choice of the points is pictured here : https://www.geogebra.org/geometry/muyypzev
   //
   let halfDia = pie3d.diameter/2,
       halfVert = pie3d.verticalFactor/2;
@@ -425,23 +425,34 @@ candyPie.angularFieldOfView = function(pie3d, cameraRadius) {
   const pZero = { 'x': 0, 'y': 0 },
         angleRad = candyPie.degrees2rad( pie3d.cameraDegreesY),
         pCamera = { 'x': cameraRadius * Math.cos(angleRad), 'y': cameraRadius * Math.sin(angleRad)};
+  
+  let angles = [];
+  angles.push( candyPie.angleBetween3Points( pZero, pCamera, {'x': -halfDia,'y':  halfVert}));
+  angles.push( candyPie.angleBetween3Points( pZero, pCamera, {'x':  halfDia,'y': -halfVert}));
+  angles.push( candyPie.angleBetween3Points( pZero, pCamera, {'x':  halfDia,'y':  halfVert}));
+  
+  // added this point to overcome an edge cases 
+  //   when verticalfactor is low (1) compared to diameter (4) with camera degree low (<20).
+  //   the pie was filling the whole canvas height (okay), but visually not ok
+  //   this happens because we do not take into account the width (diameter) in determing the fov, so add something like that
 
-  const fov1 = candyPie.angleBetween3Points( pZero, pCamera, {'x': -halfDia,'y':  halfVert}),
-        fov2 = candyPie.angleBetween3Points( pZero, pCamera, {'x':  halfDia,'y': -halfVert}),
-        fov3 = candyPie.angleBetween3Points( pZero, pCamera, {'x':  halfDia,'y':  halfVert}),
-        fov4 = candyPie.angleBetween3Points( pZero, pCamera, {'x':        0,'y':  pie3d.allowVerticalRotation? halfDia : 0}),
-        fovMax = Math.max( fov1, fov2, fov3, fov4),
+  if ( addDiaPoint) {
+    angles.push( candyPie.angleBetween3Points( pZero, pCamera, {'x': 0,'y': halfDia}));
+  }
+  
+  const fovMax = Math.max( ... angles),
         fovFinal = fovMax * pie3d.cameraFovFactor;
   
-  console.log( 'fovvv',
-    candyPie.rad2degrees( fov1, true),
-    candyPie.rad2degrees( fov2, true),
-    candyPie.rad2degrees( fov3, true),
-    candyPie.rad2degrees( fov4, true),
-    'max', candyPie.rad2degrees( fovMax, true),
-    'factor', candyPie.rad2degrees( fovFinal, true),
-    'final', fovFinal
-  );
+  if (logging) {
+    for ( let i = 0; i < angles.length; i++) {
+      console.log( 'half fov point ', i, ': ', candyPie.rad2degrees( angles[i], true));
+    }
+    
+    console.log( 'max', candyPie.rad2degrees( fovMax, true),
+      'final', candyPie.rad2degrees( fovFinal, true),
+      'final', fovFinal
+    );
+  }
   
   return fovFinal;
 }
