@@ -1,4 +1,4 @@
-//#region hi
+//#region hiCandy
 /*
     Candy pie
     - short: a 3d pie chart, on top of babylon.js
@@ -41,7 +41,7 @@
       ]
     
 */
-//#endregion hi
+//#endregion hiCandy
 
 candyPie = {};
 
