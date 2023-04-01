@@ -27,6 +27,7 @@
       hoverShowLabel
       hoverShowHeight
       hoverShowArcPct
+      extraStartDegrees : start point is 6 o'clock, this is added clockwise.
 
     data for each slice in an array, slices, as part of the pie3d object,  fields being 
     - height
@@ -387,7 +388,10 @@ candyPie.pieChart = function(pie3d) {
   
   // rotate the 1st slice 90 degrees minus half the arc of the 1st slice
   // so it is shown right into the face, and not starting at the right (at the X ax, negatif Z)
-  let rotY = Math.PI/2 - 2 * Math.PI * slices[0].arcPct / 100 / 2;
+  // and adjust for the starting angle
+  let rotY = Math.PI/2 
+           - (2 * Math.PI * slices[0].arcPct / 100 / 2) 
+           + candyPie.degrees2rad( pie3d.extraStartDegrees);
   let sliceNr = 0;
 
   candyPie.initHover(pie3d);
@@ -403,6 +407,7 @@ candyPie.pieChart = function(pie3d) {
     rotY = rotY + ( 2 * Math.PI * p.arcPct / 100);
     sliceNr = sliceNr + 1;
     
+    // spinTo[0] is already initialised
     if (!pie3d.spinTo[i]) {
       // first slice starts with - π / 2, then subtract half of the previous slice and subtract half of the actual slice
       pie3d.spinTo[i] = pie3d.spinTo[i-1] - (Math.PI * slices[i-1].arcPct / 100) - (Math.PI * slices[i].arcPct / 100);
@@ -528,6 +533,7 @@ candyPie.setPie3d = function( pie3d) {
   setDefault( 'hoverShowLabel', false);
   setDefault( 'hoverShowHeight', false);
   setDefault( 'hoverShowArcPct', false);
+  setDefault( 'extraStartDegrees', 0);
 
   if (pie3d.addLegend && (pie3d.secondsPerRotation > 0)) {
     // the rotation interferes with the repositioning of the camera when clicking on a legend item.
@@ -689,5 +695,5 @@ candyPie.spinTo = function( pie3d, property, targetval, speed) {
   ease.setEasingMode(BABYLON.EasingFunction.EASINGMODE_EASEINOUT);
   //console.log( 'spinTo', 'actual val', property, camera[property]);
   // works fine at least for alpha, beta, radius
-  BABYLON.Animation.CreateAndStartAnimation('at4', camera, property, speed, 120, camera[property], targetval, 0, ease);
+  BABYLON.Animation.CreateAndStartAnimation('spinCamera', camera, property, speed, 120, camera[property], targetval, 0, ease);
 }
