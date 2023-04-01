@@ -28,6 +28,7 @@
       hoverShowHeight
       hoverShowArcPct
       extraStartDegrees : start point is 6 o'clock, this is added clockwise.
+      renderOnce : issues with this one in the playground, and also need to call it twice, so more to investigate before rolling out
 
     data for each slice in an array, slices, as part of the pie3d object,  fields being 
     - height
@@ -37,8 +38,8 @@
 
       'slices': [
         { 'height': 100, 'arcPct': 50, 'color': 'red',    'label': 'label1'},
-        { 'height': 125, 'arcPct': 25, 'color': 'blue',   'label': 'label1'},
-        { 'height': 150, 'arcPct': 25, 'color': 'yellow', 'label': 'label1'}
+        { 'height': 125, 'arcPct': 25, 'color': 'blue',   'label': 'label2'},
+        { 'height': 150, 'arcPct': 25, 'color': 'yellow', 'label': 'label3'}
       ]
     
 */
@@ -363,6 +364,7 @@ candyPie.pieChart = function(pie3d) {
     candyPie.addHover( {"pie3d": pie3d, "mesh": donut, "label": label, "height": realHeight, "arcPct": arcFraction, "color": color});
 
     if ( pie3d.secondsPerRotation > 0 ) {
+      // add rotation
       pie3d.scene.registerAfterRender( function () {
         let extraAnglePerFrame = pie3d.secondsPerRotation > 0 ? 2*Math.PI/60 / pie3d.secondsPerRotation : 0;
         donut.addRotation( 0, extraAnglePerFrame, 0);
@@ -505,7 +507,10 @@ candyPie.createPieChartScene = function ( pie3d) {
     
   // the very pie chart
   candyPie.pieChart( pie3d);
-    
+  
+  // call the render already here, to make the renderOnce feature more stable.
+  scene.render();
+  
   return scene;
 };
 
@@ -534,6 +539,7 @@ candyPie.setPie3d = function( pie3d) {
   setDefault( 'hoverShowHeight', false);
   setDefault( 'hoverShowArcPct', false);
   setDefault( 'extraStartDegrees', 0);
+  setDefault( 'renderOnce', false);
 
   if (pie3d.addLegend && (pie3d.secondsPerRotation > 0)) {
     // the rotation interferes with the repositioning of the camera when clicking on a legend item.
@@ -669,16 +675,23 @@ candyPie.babylon = function( pie3d) {
 
   var scene = candyPie.createPieChartScene( pie3d);
   
-  pie3d.engine.runRenderLoop(function () {
+  if (pie3d.renderOnce) {
+    console.log( 'renderOnce');
     scene.render();
 
-    // slow down, little by little in case rotationSlowDown is set.
-    pie3d.secondsPerRotation *= pie3d.rotationSlowDown ? 1.0005 : 1;
-    if (pie3d.secondsPerRotation > 100) {
-      pie3d.secondsPerRotation = 0;
-    }
+  } else {
+    pie3d.engine.runRenderLoop(function () {
 
-  });
+      scene.render();
+
+      // slow down, little by little in case rotationSlowDown is set.
+      pie3d.secondsPerRotation *= pie3d.rotationSlowDown ? 1.0005 : 1;
+      if (pie3d.secondsPerRotation > 100) {
+        pie3d.secondsPerRotation = 0;
+      }
+
+    });
+  }
       
   window.addEventListener("resize", function () {
     pie3d.engine.resize();
