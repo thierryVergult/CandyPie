@@ -190,6 +190,10 @@
       <label>false</label><input type="radio" name="addLegend" value="0" onchange="pie3d[this.name] = Boolean( Number(this.value));">
       <label>true </label><input type="radio" name="addLegend" value="1" onchange="pie3d[this.name] = Boolean( Number(this.value));">
       <br>
+    
+    <p class="configOption">extraStartDegrees</p>
+      <input type="number" name="extraStartDegrees"  min="0" max="360" onchange="pie3d[this.name] = this.value;">
+      <br>
 
     <script>
       let pie3d = {
@@ -228,6 +232,7 @@
       document.getElementsByName("labelExtraTopMargin")[0].value = pie3d.labelExtraTopMargin;
       document.getElementsByName("labelColor")[0].value = pie3d.labelColor;
       document.getElementsByName("addLegend")[Number(pie3d.addLegend)].checked = true;
+      document.getElementsByName("extraStartDegrees")[0].value = pie3d.extraStartDegrees;
 
       var colorEditor = function( cell, onRendered, success, cancel, editorParams) {
 
