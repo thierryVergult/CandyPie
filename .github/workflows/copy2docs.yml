@@ -32,3 +32,8 @@ jobs:
           message: 'force commit files into /docs'
           add: '*.* --force'
           cwd: './docs/'
+          
+      - name: refresh pages
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: docs
