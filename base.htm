@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>3d pie chart - base for development</title>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width">
+    <meta name="mobile-web-app-capable" content="yes">    
+
+    <script src="https://cdn.babylonjs.com/babylon.js"></script>
+    <script src="https://cdn.babylonjs.com/gui/babylon.gui.js"></script>
+    <script src="./candy-pie-babylon.js"></script>
+
+    <style>
+      
+      /* global css variable */
+      :root {
+        --main-color: #009FC2;
+        --opposite-color: white;
+      }
+      
+      .container {
+        margin: 30px;
+        width: 50%;
+      }
+      
+
+      .candy-pie-babylon-canvas {
+        touch-action: none;  /* Disables browsers from handling all pan and zoom interactions */
+        width: 100%;
+        outline: none; /* remove outline when clicking on canvas */
+        margin-top: 10px;
+      }
+      
+    </style>
+
+  </head>
+
+  <body>
+    <div class='container'>
+
+      <h4>a candy pie</h4>
+
+      <canvas id='canvas-id' class='candy-pie-babylon-canvas'></canvas>
+
+      <p>to do</p>
+      <ul>
+        <li>starting angle &amp; renderOnce: add to docs</li>
+        <li>enhancement: depth of a slice ; modify x (so option to modify the 3 dimensions)</li>
+        <li>build: pages from action</li>
+        <li>build action: minify</li>
+      </ul>
+      
+      
+      <script>
+        let pie3d = {
+            'htmlCanvasId': 'canvas-id',
+            'slices': [
+              { 'height': 100, 'color': 'indianred', 'label': 'one one'},
+              { 'height': 100, 'color': 'steelblue', 'label': 'two'},
+              { 'height': 100, 'color': 'olive', 'label': 'three'},
+              { 'height': 100, 'color': 'khaki', 'label': 'four'}
+            ],
+            'addLegend': true,
+            'secondsPerRotation': 0,
+            'sliceShowLabel': true,
+            'allowVerticalRotation': true,
+            'rotationSlowDown': true,
+            'hoverShowLabel': true,
+            'hoverShowHeight': true,
+            'hoverShowArcPct': true,
+            'cameraDegreesY': 45,
+            'verticalFactor': 1,
+            'allowVerticalRotation': true,
+            'extraStartDegrees': 0,
+            'renderOnce': true
+          };
+        candyPie.babylon( pie3d);
+      </script>
+
+    </div>    
+  </body>
+</html>
