@@ -1,4 +1,3 @@
-@@ -1,48 +0,0 @@
 # CandyPie
 ## a configurable, interactive 3d pie chart in your browser
 
