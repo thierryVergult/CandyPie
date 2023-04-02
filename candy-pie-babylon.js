@@ -28,7 +28,7 @@
       hoverShowHeight
       hoverShowArcPct
       extraStartDegrees : start point is 6 o'clock, this is added clockwise.
-      renderOnce : issues with this one in the playground, and also need to call it twice, so more to investigate before rolling out
+      renderOnce
 
     data for each slice in an array, slices, as part of the pie3d object,  fields being 
     - height
@@ -508,9 +508,6 @@ candyPie.createPieChartScene = function ( pie3d) {
   // the very pie chart
   candyPie.pieChart( pie3d);
   
-  // call the render already here, to make the renderOnce feature more stable.
-  scene.render();
-  
   return scene;
 };
 
@@ -676,8 +673,10 @@ candyPie.babylon = function( pie3d) {
   var scene = candyPie.createPieChartScene( pie3d);
   
   if (pie3d.renderOnce) {
-    console.log( 'renderOnce');
-    scene.render();
+    
+    pie3d.scene.executeWhenReady(
+      function() {scene.render();}
+    );
 
   } else {
     pie3d.engine.runRenderLoop(function () {
