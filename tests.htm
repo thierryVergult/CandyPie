@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>3d pie chart - test cases</title>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width">
+    <meta name="mobile-web-app-capable" content="yes">    
+
+    <script src="https://cdn.babylonjs.com/babylon.js"></script>
+    <script src="https://cdn.babylonjs.com/gui/babylon.gui.js"></script>
+    <script src="./candy-pie-babylon.js"></script>
+
+    <style>
+      
+      /* global css variable */
+      :root {
+        --main-color: #009FC2;
+        --opposite-color: white;
+      }
+      
+      .container {
+        display: grid;
+        grid-gap: 30px;
+        grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+        grid-template-rows: repeat( 1, minmax(200px, 1fr));
+        font-family: QuicksandBook, Arial, sans-serif;
+      }
+      
+      .card > .header {
+        color: white;
+        font-weight: bold;
+        background-color: var( --main-color);
+        padding: 20px;
+      }
+
+      .card > .header > .note-right {
+        float: right;
+        color: var( --main-color);
+        font-weight: bold;
+        background-color: white;
+        padding-left: 8px;
+        padding-right: 8px;
+        padding-top: 4px;
+        padding-bottom: 2px;
+        margin-top: -4px;
+        border-radius: 10px;
+      }
+      
+      .card .article {
+        color: var( --main-color);
+        padding: 20px;
+      }
+      
+      .card a {
+        color: var( --main-color);
+        font-weight: bold;
+        text-decoration: inherit;
+      }
+      
+      .card .right {
+        text-align: right;
+        float: right;
+      }
+
+      pre {
+        background-color: rgb(255, 247, 229);
+        padding: 10px;
+        white-space: pre-line;
+        overflow: auto;
+      }
+
+      .candy-pie-title {
+        font-weight: bold;
+        font-size: large;
+        margin-top: 20px;
+        margin-bottom: 20px;
+      }
+
+      .candy-pie-babylon-canvas {
+        touch-action: none;  /* Disables browsers from handling all pan and zoom interactions */
+        width: 100%;
+        outline: none; /* remove outline when clicking on canvas */
+        margin-top: 10px;
+      }
+      
+    </style>
+
+  </head>
+
+  <body>
+    <div class='container'>
+
+      <div class='card' id='test-001'>
+        <div class='header'>minimal</div>
+        <div class='article'>
+          <p>default candy pie, without extra configuration</p>
+
+          <canvas id='canvas-001' class='candy-pie-babylon-canvas'></canvas>
+          <script>
+            let pie3d_001 = {
+              'htmlCanvasId': 'canvas-001',
+              'slices': [
+                { 'height': 100, 'color': 'indianred'},
+                { 'height': 100, 'color': 'steelblue'},
+                { 'height': 100, 'color': 'olive'}
+              ]
+            };
+            candyPie.babylon( pie3d_001);
+          </script>
+        </div>
+      </div>
+
+      <div class='card' id='test-002'>
+        <div class='header'>some options</div>
+        <div class='article'>
+            
+          <ul>
+            <li><i>spaceBetweenSlices</i>: default false, set to true in case
+            <li><i>innerRadiusPct</i>: default 0, set to a higher number to have a donut
+            <li><i>backgroundColor</i>: set the color of the background of the canvas
+          </ul>
+
+          <div>
+            <canvas id='canvas-002' class='candy-pie-babylon-canvas'></canvas>
+    
+            <script>
+              let pie3d_002 = {
+                'htmlCanvasId': 'canvas-002',
+                'slices': [
+                  { 'height': 100, 'color': 'indianred'},
+                  { 'height': 100, 'color': 'steelblue'},
+                  { 'height': 100, 'color': 'olive'}
+                ],
+                'spaceBetweenSlices': true,
+                'innerRadiusPct': 40,
+                'backgroundColor': 'lightgrey'
+              };
+              
+              candyPie.babylon( pie3d_002);
+            </script>
+    
+          </div>
+
+        </div>
+      </div>
+
+
+      <div class='card' id='test-003'>
+        <div class='header'>some more options</div>
+        <div class='article'>
+            
+          <ul>
+            <li><i>allowVerticalRotation</i>: default true, here set to false. So now only horizontal rotation is possible.
+            <li><i>cameraDegreesY</i>: the camera position is set to 30 degrees, a little lower than the default of 45 degrees. Camera position starts at the ground plane.
+          </ul>
+          
+
+          <div>
+            <canvas id='canvas-003' class='candy-pie-babylon-canvas' style="aspect-ratio: 3/2;"></canvas>
+    
+            <script>
+              let pie3d_003 = {
+                'htmlCanvasId': 'canvas-003',
+                'slices': [
+                  { 'height': 100, 'color': 'indianred'},
+                  { 'height': 100, 'color': 'steelblue'},
+                  { 'height': 100, 'color': 'olive'}
+                ],
+                'spaceBetweenSlices': true,
+                'innerRadiusPct': 40,
+                'backgroundColor': 'lightgrey',
+                // 3 more options
+                'cameraDegreesY': 30,
+                'allowVerticalRotation': false
+              };
+              
+              candyPie.babylon( pie3d_003);
+            </script>
+    
+          </div>
+
+        </div>
+      </div>
+
+      <div class='card' id='height-widt-arc'>
+        <div class='header'>variable height and width</div>
+        <div class='article'>
+          <p>
+            Until now, all pie charts had slices with the same size. 
+            Changing the height of the slices changes the relative height. 
+            And setting the arc percentage drives the "width" of each slice.
+          </p>
+          <p>The first slice of this example below takes 50%, the other 2 slices take each 25%.</p>
+          <p>The height increases from 100, to 125, to 150. This influences the relative height of the slices.</p>
+
+          <div>
+            <canvas id='candy-pie-id04' class='candy-pie-babylon-canvas' style="aspect-ratio: 3/2;"></canvas>
+    
+            <script>
+              let pie3d_4 = {
+                'htmlCanvasId': 'candy-pie-id04',
+                'slices': [
+                  { 'height': 100, 'arcPct': 50, 'color': 'indianred'},
+                  { 'height': 125, 'arcPct': 25, 'color': 'steelblue'},
+                  { 'height': 150, 'arcPct': 25, 'color': 'olive'}
+                ],
+                'spaceBetweenSlices': true,
+                'innerRadiusPct': 40,
+                'backgroundColor': 'lightgrey',
+                'cameraDegreesY': 30
+              };
+              
+              candyPie.babylon( pie3d_4);
+            </script>
+    
+            <pre>
+              
+              'slices': [
+                  { 'height': 100, 'arcPct': 50, ..},
+                  { 'height': 125, 'arcPct': 25, ..},
+                  { 'height': 150, 'arcPct': 25, ..}
+                ],
+              
+            </pre>
+    
+          </div>
+
+        </div>
+      </div>
+
+
+      <div class='card' id='labels'>
+        <div class='header'>labels</div>
+        <div class='article'>
+          <p>A few options for the labels shown on the slice surface:</p>
+          <ul>
+            <li>sliceShowLabel: boolean, default false.
+            <li>hoverShowHeight: boolean, default false.
+            <li>labelFontFactor: default 1. In case a greater font is desired, increase here the font factor.
+            <li>labelExtraTopMargin: default 0. Increment this figure in case the labels should show up a little lower within each slice.
+            <li>labelColor: default empty. If so, the scripts uses black or white labels, depending of the color of the slice. If not, this color is used for all slices.
+          </ul>
+        </div>
+      </div>
+
+
+      <div class='card' id='all-in'>
+        <div class='header'>Variable pie chart with labels</div>
+        <div class='article'>
+                   
+          <p>Here a pie chart with 5 slices and labels. The slices have a variable height and a variable arc : slice 4 is smaller, applepie is larger than the others.</p>
+
+          <pre id='id-pick-color'>
+            'slices': [
+            &nbsp; { 'height': 10, 'arcPct': 20, 'label': 'one'},
+            &nbsp; { 'height': 12, 'arcPct': 20, 'label': 'two'},
+            &nbsp; { 'height': 14, 'arcPct': 20, 'label': 'three'},
+            &nbsp; { 'height': 16, 'arcPct': 10, 'label': 'four'},
+            &nbsp; { 'height': 18, 'arcPct': 30, 'label': 'apples'}
+            ],
+            ..
+            'sliceShowLabel': true,
+            'labelFontFactor': 1.5,
+            
+          </pre>
+          
+          <p>ps: the background color of the pie chart is dynamically taken from the code snippet above. Can be handy when you want to reuse colors of your site in the pie.</p>
+
+          <div>
+            <canvas id='candy-pie-babylon-canvas-id' class='candy-pie-babylon-canvas' style="aspect-ratio: 16/9"></canvas>
+
+            <script>
+              let pie3d = {
+                'htmlCanvasId': 'candy-pie-babylon-canvas-id',
+                'slices': [
+                  { 'height': 10, 'arcPct': 1/5 * 100,  'color': 'indianred', 'label': 'one'},
+                  { 'height': 12, 'arcPct': 1/5 * 100,  'color': 'steelblue', 'label': 'two'},
+                  { 'height': 14, 'arcPct': 1/5 * 100,  'color': 'olive',     'label': 'three'},
+                  { 'height': 16, 'arcPct': 1/10 * 100, 'color': 'aliceblue', 'label': 'four'},
+                  { 'height': 18, 'arcPct': 3/10 * 100, 'color': '#F5DEB3',   'label': 'apples'} // color: wheat
+                ],
+                'spaceBetweenSlices': true,
+                'innerRadiusPct': 40,
+                'sliceShowLabel': true,
+                'labelFontFactor': 1.5,
+                'backgroundColor': window.getComputedStyle( document.getElementById( 'id-pick-color')).backgroundColor,
+                'verticalFactor': 1.6 // increment this number in case you want higher vertical slices
+              };
+              
+              candyPie.babylon( pie3d);
+            </script>
+
+          </div>
+          
+        </div>
+      </div>
+
+
+      <div class='card' id='vertical'>
+        <div class='header'>higher slices</div>
+        <div class='article'>
+          <p>This pie chart has also 5 slices, all with same width (arc), but the slices are all made higher than in the previous pie chart. 
+            This is done via the <i>verticalFactor</i> configuration option, which stretches the slices vertically.</p>
+          <p>addLegend, well, adds a legend. For each slice with a label a legend item is shown. Clicking on such item moves the slice in front.</p>
+          <p>When clicking on a slice, a hover box pops up. The box contains the label and the height of the slice, as configured by <i>hoverShowLabel</i> &amp; <i>hoverShowHeight</i>.</p>
+          <p>Also possible <i>hoverShowArcPct</i></p>
+  
+        <div>
+          <canvas id='candy-pie-babylon-canvas-id2' class='candy-pie-babylon-canvas' style="width:80%; margin-left: 10%; aspect-ratio: 1/1"></canvas>
+  
+          <script>
+            let pie3d2 = {
+              'htmlCanvasId': 'candy-pie-babylon-canvas-id2',
+              'slices': [
+                { 'height': 100, 'arcPct': 1/5 * 100, 'color': 'indianred', 'label': 'one'},
+                { 'height':  80, 'arcPct': 1/5 * 100, 'color': 'steelblue', 'label': 'two'},
+                { 'height': 120, 'arcPct': 1/5 * 100, 'color': 'olive',     'label': 'three'},
+                { 'height':  80, 'arcPct': 1/5 * 100, 'color': 'aliceblue', 'label': 'four'},
+                { 'height': 120, 'arcPct': 1/5 * 100, 'color': '#F5DEB3',   'label': 'apples'} // color: wheat
+              ],
+              'spaceBetweenSlices': true,
+              'innerRadiusPct': 40, // use 0 to get rid of the donut hole
+              'sliceShowLabel': true,
+              'hoverShowLabel': true,
+              'hoverShowHeight': true,
+              'labelFontFactor': 1.5,
+              'backgroundColor': 'rgb(155, 102, 102)',
+              'verticalFactor': 4,
+              'addLegend': true
+            };
+            
+            candyPie.babylon( pie3d2);
+          </script>
+
+          <pre>
+            
+            'verticalFactor': 4,
+            'addLegend': true,
+            'hoverShowLabel': true,
+            'hoverShowHeight': true,
+            
+          </pre>
+  
+        </div>    
+        </div>
+      </div>
+
+      <div class='card' id='test-007'>
+        <div class='header'>holiday pie chart</div>
+        <div class='article'>
+
+          <p>with rotation.</p>
+          <div>
+            <canvas id='canvas-007' class='candy-pie-babylon-canvas' style="width:75%; margin-left: 12%; aspect-ratio: 4/3"></canvas>
+
+            <script>
+              candyPie.babylon( {
+                'htmlCanvasId': 'canvas-007',
+                'slices': [
+                  { 'height': 1, 'color': 'lightblue', 'label': 'swimming'},
+                  { 'height': 1, 'color': '#f8f6e1',   'label': 'ice cream'},
+                  { 'height': 1, 'color': 'lightblue', 'label': 'cocktails'},
+                  { 'height': 1, 'color': '#f8f6e1',   'label': 'relaxing'}
+                ],
+                'spaceBetweenSlices': true,
+                'innerRadiusPct': 25, // use 0 to get rid of the donut hole
+                'sliceShowLabel': true,
+                'labelFontFactor': 2.5,
+                'labelExtraTopMargin': 20,
+                'labelColor': 'rgb(155, 102, 102)',
+                'backgroundColor': 'rgb(196,238,216)', // green-ish
+                'verticalFactor': 2,
+                'allowVerticalRotation' : false,
+                'cameraDegreesY': 30,
+                'secondsPerRotation': 5
+              });
+            </script>
+
+          </div>
+          
+        </div>
+      </div>
+
+    </div>
+    
+</body>
+</html>
