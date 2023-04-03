@@ -35,6 +35,7 @@
     - arcPct
     - color
     - label
+    - radiusPct
 
       'slices': [
         { 'height': 100, 'arcPct': 50, 'color': 'red',    'label': 'label1'},
@@ -272,7 +273,7 @@ candyPie.addHover = function( {pie3d, mesh, label, height, arcPct, color}) {
 
 candyPie.pieChart = function(pie3d) {
   
-  let oneSlice = function( {relativeHeight, arcFraction, color, label, realHeight}) {
+  let oneSlice = function( {relativeHeight, arcFraction, color, label, realHeight, radiusPct = 100}) {
     
     if (relativeHeight <= 0 || arcFraction <= 0) {
       return;
@@ -288,7 +289,7 @@ candyPie.pieChart = function(pie3d) {
     // cylinder with arc
     const pie = BABYLON.MeshBuilder.CreateCylinder( 'pie', {
       height: Math.abs( relativeHeight),
-      diameter: pie3d.diameter,
+      diameter: pie3d.diameter * (radiusPct/100),
       arc: arcFraction,  // fraction of 2 pi (ratio of the circumference between 0 and 1)
       enclose: true,  // activates the left & right side faces
       faceUV: faceUV
@@ -403,7 +404,7 @@ candyPie.pieChart = function(pie3d) {
     let p = slices[i],
         h = p.height / maxVal * pie3d.verticalFactor;
   
-    let slice = oneSlice({ "relativeHeight": h, "arcFraction": p.arcPct / 100, "color": p.color, "label": p.label, "realHeight": p.height});
+    let slice = oneSlice({ "relativeHeight": h, "arcFraction": p.arcPct / 100, "color": p.color, "label": p.label, "realHeight": p.height, "radiusPct": p.radiusPct});
     
     // increment rotY for the next slice
     rotY = rotY + ( 2 * Math.PI * p.arcPct / 100);

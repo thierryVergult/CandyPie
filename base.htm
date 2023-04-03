@@ -45,7 +45,7 @@
 
       <p>to do</p>
       <ul>
-        <li>enhancement: depth of a slice ; modify x (so option to modify the 3 dimensions)</li>
+        <li>enhancement: depth / radius of a slice ; modify diameter of the initial cylinder</li>
       </ul>
       
       
@@ -54,9 +54,9 @@
             'htmlCanvasId': 'canvas-id',
             'slices': [
               { 'height': 100, 'color': 'indianred', 'label': 'one one'},
-              { 'height': 100, 'color': 'steelblue', 'label': 'two'},
+              { 'height': 110, 'color': 'steelblue', 'label': 'two', 'radiusPct': 90},
               { 'height': 100, 'color': 'olive', 'label': 'three'},
-              { 'height': 100, 'color': 'khaki', 'label': 'four'}
+              { 'height': 100, 'color': 'khaki', 'label': 'four', 'arcPct': 25}
             ],
             'addLegend': true,
             'secondsPerRotation': 0,
@@ -70,7 +70,9 @@
             'verticalFactor': 1,
             'allowVerticalRotation': true,
             'extraStartDegrees': 0,
-            'renderOnce': false
+            'renderOnce': false,
+            'spaceBetweenSlices': false,
+            'innerRadiusPct': 0
           };
         candyPie.babylon( pie3d);
       </script>
