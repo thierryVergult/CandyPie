@@ -5,14 +5,14 @@ Let's break down that sentence ..
 
 - candy: don't take it that seriously. Pie charts are not always loved.. One should not use 3d for charts.. Negative times negative equals positive?
 - pie: yes indeed, a pie chart. See above.
-- configurable: all options are described below. Curious which other options will prove to be interesting later on.
-- interactive: the result is not a static image, but a 3d object one can rotate. Or zoom into a slice.
+- configurable: all options are described in the playground. Curious which other options will prove to be interesting later on.
+- interactive: the result is not a static image, but a 3d object one can drive.
 - 3d: standing on the shoulders of babylon.js
 - browser: works in a modern browser, desktop & mobile
 
 ## playground
 
-Try it out, play with the options, in the [playground](https://thierryvergult.github.io/CandyPie/playground.htm).
+Try it out, see all configuration options, in the [playground](https://thierryvergult.github.io/CandyPie/playground.htm).
 
 ## usage
 
@@ -24,7 +24,7 @@ Supports two data sets, one that sets the height of the slices, and one (optiona
 
 example
 ```
-let pie3d_2 = {
+let myPie3d = {
 'htmlCanvasId': 'candy-pie-id01',
 'slices': [
   { 'height': 100, 'color': 'indianred'},
